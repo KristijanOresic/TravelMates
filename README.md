@@ -60,16 +60,16 @@ Zahtjevi za lokalizaciju *
 - Testiranje:
 - Dokumentacija:
 
-# Instalcija
+# Instalacija
 
 
 # Članovi tima 
-Vita Pavlović
-Nola Bonačić Dorić
-Kristijan Orešić
-Ognjen Škarić
-Nik Čolić
-Franko Pavlić
+Vita Pavlović<br>
+Nola Bonačić Dorić<br>
+Kristijan Orešić<br>
+Ognjen Škarić<br>
+Nik Čolić<br>
+Franko Pavlić<br>
 
 # Kontribucije
 >Pravila ovise o organizaciji tima i su često izdvojena u CONTRIBUTING.md
