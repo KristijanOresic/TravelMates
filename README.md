@@ -16,16 +16,58 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 > Dobro izrađen opis omogućuje vam da pokažete svoj rad drugim programerima, kao i potencijalnim poslodavcima. Ne samo da prvi dojam na stranici opisa često razlikuje dobar projekt od lošeg projekta već i predstavlja dobru praksu koju morate savladati.
 
 # Funkcijski zahtjevi
+- Aplikacija omogućuje korisnicima registraciju i prijavu putem e-maila i lozinke ili vanjske autentifikacije (OAuth, npr. Google login).
 
+- Aplikacija prikazuje znamenitosti na korisniku bliskoj lokaciji pomoću Google Maps API-ja.
 
+- Klikom na znamenitost korisniku se prikazuju detaljni opisi, slike i korisne informacije.
+
+- Korisnici mogu spremiti znamenitosti u favorite radi bržeg pristupa.
+
+- Aplikacija nudi mogućnost pretvaranja opisa znamenitosti u audio putem Text-to-Speech API-ja.
+
+- Urednici mogu dodavati nove znamenitosti i uređivati postojeće podatke.
+
+# Nefunkcijski zahtjevi
+
+Zahtjevi za održavanje
+Sustav treba biti modularno dizajniran radi lakšeg održavanja i nadogradnje.
+
+Zahtjevi za sigurnost
+Svi korisnički podaci moraju biti šifrirani i sigurno pohranjeni.
+Uredničke funkcije moraju biti dostupne samo korisnicima s ulogom urednika.
+
+Zahtjevi za skalabilnost
+Aplikacija mora podržati povećanje broja korisnika i znamenitosti bez značajnog pada performansi.
+Baza podataka mora biti skalabilna i podržavati brzo pretraživanje i dohvat podataka.
+
+Zahtjevi za performanse
+Vrijeme učitavanja karte i znamenitosti ne smije prelaziti 5 sekundi.
+
+Zahtjevi za korisničko sučelje
+Sučelje mora biti responzivno i prilagodljivo različitim veličinama ekrana.
+Navigacija kroz aplikaciju mora biti intuitivna.
+
+Zahtjevi za lokalizaciju *
+Aplikacija mora podržavati više jezika (hrvatski, engleski)
 
 
 # Tehnologije
 
+Frontend: React Javascript
+Backend: Node js, Python
+Baza podataka: PostgreSQL
+Testiranje:
+Dokumentacija:
+
 #Instalcija
 # Članovi tima 
-> Popis članova tima/linkovi/ glavni doprinos
->
+Vita Pavlović
+Nola Bonačić Dorić
+Kristijan Orešić
+Ognjen Škarić
+Nik Čolić
+Franko Pavlić
 
 # Kontribucije
 >Pravila ovise o organizaciji tima i su često izdvojena u CONTRIBUTING.md
