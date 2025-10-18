@@ -30,26 +30,26 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 
 # Nefunkcijski zahtjevi
 
-Zahtjevi za održavanje \n
-Sustav treba biti modularno dizajniran radi lakšeg održavanja i nadogradnje.
+Zahtjevi za održavanje
+- Sustav treba biti modularno dizajniran radi lakšeg održavanja i nadogradnje.
 
 Zahtjevi za sigurnost
-Svi korisnički podaci moraju biti šifrirani i sigurno pohranjeni.
-Uredničke funkcije moraju biti dostupne samo korisnicima s ulogom urednika.
+- Svi korisnički podaci moraju biti šifrirani i sigurno pohranjeni.
+- Uredničke funkcije moraju biti dostupne samo korisnicima s ulogom urednika.
 
 Zahtjevi za skalabilnost
-Aplikacija mora podržati povećanje broja korisnika i znamenitosti bez značajnog pada performansi.
-Baza podataka mora biti skalabilna i podržavati brzo pretraživanje i dohvat podataka.
+- Aplikacija mora podržati povećanje broja korisnika i znamenitosti bez značajnog pada performansi.
+- Baza podataka mora biti skalabilna i podržavati brzo pretraživanje i dohvat podataka.
 
 Zahtjevi za performanse
-Vrijeme učitavanja karte i znamenitosti ne smije prelaziti 5 sekundi.
+- Vrijeme učitavanja karte i znamenitosti ne smije prelaziti 5 sekundi.
 
 Zahtjevi za korisničko sučelje
-Sučelje mora biti responzivno i prilagodljivo različitim veličinama ekrana.
-Navigacija kroz aplikaciju mora biti intuitivna.
+- Sučelje mora biti responzivno i prilagodljivo različitim veličinama ekrana.
+- Navigacija kroz aplikaciju mora biti intuitivna.
 
 Zahtjevi za lokalizaciju *
-Aplikacija mora podržavati više jezika (hrvatski, engleski)
+- Aplikacija mora podržavati više jezika (hrvatski, engleski)
 
 
 # Tehnologije
