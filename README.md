@@ -54,11 +54,11 @@ Zahtjevi za lokalizaciju *
 
 # Tehnologije
 
-Frontend: React Javascript
-Backend: Node js, Python
-Baza podataka: PostgreSQL
-Testiranje:
-Dokumentacija:
+- Frontend: React Javascript
+- Backend: Node js, Python
+- Baza podataka: PostgreSQL
+- Testiranje:
+- Dokumentacija:
 
 #Instalcija
 # Članovi tima 
