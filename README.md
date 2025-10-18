@@ -30,7 +30,7 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 
 # Nefunkcijski zahtjevi
 
-Zahtjevi za održavanje
+Zahtjevi za održavanje \n
 Sustav treba biti modularno dizajniran radi lakšeg održavanja i nadogradnje.
 
 Zahtjevi za sigurnost
