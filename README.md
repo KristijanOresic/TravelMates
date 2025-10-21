@@ -1,19 +1,18 @@
 # TravelMate
 
-> Ime projekta u naslovu ima cilj opisati namjenu projekta te pomoći u podizanju početnog interesa za projekt prezentirajući osnovnu svrhu projekta.
-> Isključivo ovisi o Vama!
-> 
-> Naravno, nijedan predložak nije idealan za sve projekte jer su potrebe i ciljevi različiti. Ne bojte se naglasiti Vaš cilj u ovoj početnoj stranici projekta, podržat ćemo ga bez obzira usredotočili se Vi više na tenologiju ili marketing.
-> 
-> Zašto ovaj dokument? Samo manji dio timova je do sada propoznao potrebu (a i meni je lakše pratiti Vaš rad).  
+TravelMate je web aplikacija namijenjena turistima i lokalnim posjetiteljima, koja omogućuje jednostavno otkrivanje, istraživanje i upoznavanje znamenitosti putem interaktivne karte. Korisnici mogu pregledavati atrakcije u svojoj blizini, čitati ili slušati njihove opise te spremati omiljena mjesta u favorite. Cilj projekta je olakšati planiranje obilazaka, poboljšati iskustvo razgledavanja i omogućiti intuitivno korištenje digitalnog turističkog vodiča, dok urednici održavaju sadržaj točnim i ažurnim.
 
 # Opis projekta
+
+## Napomena
 Ovaj projekt je reultat timskog rada u sklopu projeknog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu. 
 
-Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije »Zato što je to bio zadatak i nismo imali ideje za drugo.«). Koji problem rješavate?
-> Obzirom da je ovo zadani projekt navedite i što želite/jeste novo  naučili.
+## Motivacija projekta
+U današnje vrijeme turisti i lokalni posjetitelji često se suočavaju s izazovima pri pronalasku pouzdanih i ažurnih informacija o znamenitostima koje žele posjetiti. Unatoč velikoj količini dostupnih podataka na internetu, informacije su često raspršene, neažurne ili neprilagođene potrebama korisnika u pokretu. TravelMate je osmišljen kao rješenje koje objedinjuje sve relevantne podatke o atrakcijama na jednom mjestu, nudeći intuitivan prikaz putem interaktivne karte i mogućnost slušanja audio opisa. Cilj aplikacije je olakšati istraživanje destinacija, poboljšati turističko iskustvo i omogućiti svakom posjetitelju da jednostavno i ugodno otkriva kulturne i povijesne znamenitosti svog okruženja.
 
-> Dobro izrađen opis omogućuje vam da pokažete svoj rad drugim programerima, kao i potencijalnim poslodavcima. Ne samo da prvi dojam na stranici opisa često razlikuje dobar projekt od lošeg projekta već i predstavlja dobru praksu koju morate savladati.
+## Stečena znanja 
+Radom na projektu TravelMate steći ćemo praktična znanja iz razvoja modernih web aplikacija koristeći React za izradu dinamičnog i responzivnog frontend sučelja te Node.js i Python za backend logiku i obradu podataka. Projekt omogućuje iskustvo u integraciji vanjskih servisa poput Google Maps API-ja i Text-to-Speech API-ja, kao i u implementaciji autentifikacije korisnika i upravljanju ulogama. Kroz razvoj aplikacije stječu se i vještine u dizajnu baza podataka te razumijevanje načela dobrog korisničkog iskustva i učinkovitog povezivanja frontend i backend dijela sustava.
+
 
 # Funkcijski zahtjevi
 * Aplikacija omogućuje korisnicima registraciju i prijavu putem e-maila i lozinke ili vanjske autentifikacije (OAuth, npr. Google login).
