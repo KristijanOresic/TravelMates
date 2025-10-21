@@ -47,7 +47,7 @@ Radom na projektu TravelMate steći ćemo praktična znanja iz razvoja modernih 
 - Sučelje mora biti responzivno i prilagodljivo različitim veličinama ekrana.
 - Navigacija kroz aplikaciju mora biti intuitivna.
 
-## Zahtjevi za lokalizaciju *
+## Zahtjevi za lokalizaciju 
 - Aplikacija mora podržavati više jezika (hrvatski, engleski)
 
 
