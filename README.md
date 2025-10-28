@@ -38,14 +38,12 @@ Radom na projektu TravelMate steći ćemo praktična znanja iz razvoja modernih 
 
 ## Zahtjevi za skalabilnost
 - Aplikacija mora podržati povećanje broja korisnika i znamenitosti bez značajnog pada performansi.
-- Baza podataka mora biti skalabilna i podržavati brzo pretraživanje i dohvat podataka.
-
+  
 ## Zahtjevi za performanse
 - Vrijeme učitavanja karte i znamenitosti ne smije prelaziti 5 sekundi.
 
 ## Zahtjevi za korisničko sučelje
 - Sučelje mora biti responzivno i prilagodljivo različitim veličinama ekrana.
-- Navigacija kroz aplikaciju mora biti intuitivna.
 
 ## Zahtjevi za lokalizaciju 
 - Aplikacija mora podržavati više jezika (hrvatski, engleski)
