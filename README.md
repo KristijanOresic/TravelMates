@@ -15,13 +15,13 @@ Radom na projektu TravelMate steći ćemo praktična znanja iz razvoja modernih 
 
 
 # Funkcijski zahtjevi
-* Aplikacija omogućuje korisnicima registraciju i prijavu putem e-maila i lozinke ili vanjske autentifikacije (OAuth, npr. Google login).
+* Aplikacija omogućuje korisnicima registraciju i prijavu putem vanjske autentifikacije (OAuth).
 
 * Aplikacija prikazuje znamenitosti na korisniku bliskoj lokaciji pomoću Google Maps API-ja.
 
-* Klikom na znamenitost korisniku se prikazuju detaljni opisi, slike i korisne informacije.
+* Korisnik može dobiti uvid u opise, slike i korisne informacije o znamenitosti.
 
-* Korisnici mogu spremiti znamenitosti u favorite radi bržeg pristupa.
+* Korisnik može spremiti znamenitosti u favorite radi bržeg pristupa.
 
 * Aplikacija nudi mogućnost pretvaranja opisa znamenitosti u audio putem Text-to-Speech API-ja.
 
