@@ -1,20 +1,16 @@
-# Programsko inženjerstvo
+#  TravelMate
 
-> Ime projekta u naslovu ima cilj opisati namjenu projekta te pomoći u podizanju početnog interesa za projekt prezentirajući osnovnu svrhu projekta.
-> Isključivo ovisi o Vama!
-> 
-> Naravno, nijedan predložak nije idealan za sve projekte jer su potrebe i ciljevi različiti. Ne bojte se naglasiti Vaš cilj u ovoj početnoj stranici projekta, podržat ćemo ga bez obzira usredotočili se Vi više na tenologiju ili marketing.
-> 
-> Zašto ovaj dokument? Samo manji dio timova je do sada propoznao potrebu (a i meni je lakše pratiti Vaš rad).  
+TravelMate je web aplikacija namijenjena turistima i lokalnim posjetiteljima, koja omogućuje jednostavno otkrivanje i istraživanje znamenitosti putem interaktivne karte. Korisnicima pruža informacije o lokacijama, opisima i zanimljivostima, uz mogućnost slušanja audio vodiča pomoću Text-to-Speech tehnologije. Cilj projekta je olakšati planiranje obilazaka, poboljšati iskustvo razgledavanja i pružiti moderan, digitalni način istraživanja destinacija.
 
 # Opis projekta
+
+## Napomena
 Ovaj projekt je reultat timskog rada u sklopu projeknog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu. 
 
-Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije »Zato što je to bio zadatak i nismo imali ideje za drugo.«). Koji problem rješavate?
-> Obzirom da je ovo zadani projekt navedite i što želite/jeste novo  naučili.
+## Motivacija
+Turisti i lokalni posjetitelji često se suočavaju s problemom pronalaska pouzdanih i ažurnih informacija o znamenitostima koje žele posjetiti. Informacije su često raspršene po različitim izvorima, što otežava planiranje obilazaka i smanjuje kvalitetu turističkog doživljaja. Naša aplikacija TravelMate osmišljena je kako bi sve važne podatke o atrakcijama objedinjila na jednom mjestu te korisnicima omogućila pregled putem interaktivne karte i slušanje audio opisa. Na taj način želimo olakšati istraživanje destinacija, poboljšati iskustvo razgledavanja i potaknuti moderniji pristup turizmu.
 
-> Dobro izrađen opis omogućuje vam da pokažete svoj rad drugim programerima, kao i potencijalnim poslodavcima. Ne samo da prvi dojam na stranici opisa često razlikuje dobar projekt od lošeg projekta već i predstavlja dobru praksu koju morate savladati.
-
+## Stečena znanja
 # Funkcijski zahtjevi
 > Navedite ključne zahtjeve Vašeg projekta.
 
@@ -23,8 +19,12 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 
 #Instalcija
 # Članovi tima 
-> Popis članova tima/linkovi/ glavni doprinos
->
+Kristijan Orešić - voditelj tima<br>
+Franko Pavlić<br>
+Ognjen Škarić<br>
+Nik Čolić<br>
+Nola Bonačić-Dorić<br>
+Vita Pavlović<br>
 
 # Kontribucije
 >Pravila ovise o organizaciji tima i su često izdvojena u CONTRIBUTING.md
