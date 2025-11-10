@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./ChooseRole.css";
 
 export default function ChooseRole() {
   const [role, setRole] = useState("user");
@@ -35,8 +36,11 @@ export default function ChooseRole() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1>Registracija / Prijava u TravelMate</h1>
+    <div className="chooseRole-container" style={{ textAlign: "center", marginTop: "100px" }}>
+      <div className="logo-corner">
+        <img src={`${process.env.PUBLIC_URL}/travelmateLogo.png`} alt="TravelMate Logo" />
+      </div>
+      <h1 className="registracija">Registracija / Prijava u TravelMate</h1>
 
       <div style={{ marginBottom: "15px" }}>
         <input
