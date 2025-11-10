@@ -36,69 +36,70 @@ export default function ChooseRole() {
   };
 
   return (
-    <div className="chooseRole-container" style={{ textAlign: "center", marginTop: "100px" }}>
+    <div className="chooseRole-page">
       <div className="logo-corner">
         <img src={`${process.env.PUBLIC_URL}/travelmateLogo.png`} alt="TravelMate Logo" />
       </div>
-      <h1 className="registracija">Registracija / Prijava u TravelMate</h1>
 
-      <div style={{ marginBottom: "15px" }}>
-        <input
-          type="text"
-          placeholder="Ime"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          style={{ padding: "8px", marginRight: "10px" }}
-        />
-        <input
-          type="text"
-          placeholder="Prezime"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          style={{ padding: "8px", marginRight: "10px" }}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ padding: "8px" }}
-        />
-      </div>
-
-      <div style={{ marginBottom: "20px" }}>
-        <label>
+      <div className="chooseRole-container">
+        <h1 className="registracija">Registracija u aplikaciju TravelMate</h1>
+        
+        <div className="input-group">
           <input
-            type="radio"
-            name="role"
-            value="user"
-            checked={role === "user"}
-            onChange={() => setRole("user")}
+            type="text"
+            placeholder="Ime"
+            className="input-field"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
-          User
-        </label>
-        <label style={{ marginLeft: "20px" }}>
           <input
-            type="radio"
-            name="role"
-            value="admin"
-            checked={role === "admin"}
-            onChange={() => setRole("admin")}
+            type="text"
+            placeholder="Prezime"
+            className="input-field"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
           />
-          Admin
-        </label>
-      </div>
+          <input
+            type="email"
+            placeholder="Email"
+            className="input-field"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button onClick={handleRegister} style={{ padding: "10px 20px", marginBottom: "10px" }}>
-          Registriraj se
-        </button>
-      </div>
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="user"
+              checked={role === "user"}
+              onChange={() => setRole("user")}
+            />
+            Korisnik
+          </label>
+          <label style={{ marginLeft: "20px" }}>
+            <input
+              type="radio"
+              name="role"
+              value="admin"
+              checked={role === "admin"}
+              onChange={() => setRole("admin")}
+            />
+            Administrator
+          </label>
+        </div>
 
-      <div>
-        <button onClick={handleLogin} style={{ padding: "10px 20px" }}>
-          Već imaš račun? Loginaj se
-        </button>
+        <div>
+          <button className="action-button" onClick={handleRegister}>
+            Registriraj se
+          </button>
+      
+          <button className="action-button" onClick={handleLogin}>
+            Već imaš račun? Prijavi se
+          </button>
+        </div>
       </div>
     </div>
   );
