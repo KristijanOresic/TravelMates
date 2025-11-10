@@ -153,13 +153,33 @@ app.get(
 app.get("/login/failed", (req, res) => res.status(401).send("Login failed"));
 
 // Ruta koja vraća trenutnog korisnika
+// Ruta koja vraća trenutnog korisnika
 app.get("/me", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Not logged in" });
 
   try {
     const user = jwt.verify(token, SESSION_SECRET);
-    res.json(user);
+    
+    // Get complete user data from database including first name
+    pool.query("SELECT id, email, role, first_name, last_name FROM users WHERE id=$1", [user.id])
+      .then(result => {
+        if (result.rows.length > 0) {
+          res.json({
+            id: result.rows[0].id,
+            email: result.rows[0].email,
+            role: result.rows[0].role,
+            firstName: result.rows[0].first_name,
+            lastName: result.rows[0].last_name
+          });
+        } else {
+          res.status(404).json({ error: "User not found" });
+        }
+      })
+      .catch(err => {
+        console.error("Database error in /me:", err);
+        res.status(500).json({ error: "Database error" });
+      });
   } catch (err) {
     res.status(401).json({ error: "Invalid token" });
   }
