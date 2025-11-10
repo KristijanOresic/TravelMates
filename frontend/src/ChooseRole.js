@@ -15,7 +15,8 @@ export default function ChooseRole() {
 
     try {
       // Provjera emaila
-      const check = await axios.post("http://localhost:4000/check-email", { email });
+      const check = await axios.post("http://localhost:4000/check-email", { email },
+  { withCredentials: true });
       if (check.data.exists) {
         alert("Ovaj email već postoji! Molimo loginaj se.");
         return;

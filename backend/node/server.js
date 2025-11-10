@@ -14,12 +14,13 @@ const app = express();
 
 // PostgreSQL pool
 const pool = new pg.Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "TravelMate",
-  password: "database",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,      // "db" unutar Docker-a
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT,
 });
+
 
 // Konstante
 const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";

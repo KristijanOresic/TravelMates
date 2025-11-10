@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: my_postgres
+    ports:
+      - "5431:5432"   # localhost:5431 -> container 5432
+    environment:
+      POSTGRES_PASSWORD: database
+      POSTGRES_USER: postgres
+      POSTGRES_DB: database
+    volumes:
+      - D:/docker-data/gsadmin:/var/lib/postgresql/data  # bind mount na D: disk
+      - ./backend/node/database.sql:/docker-entrypoint-initdb.d/database.sql:ro
