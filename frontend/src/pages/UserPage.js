@@ -25,6 +25,8 @@ export default function UserPage() {
       <button onClick={handleLogout} style={{ marginTop: "20px", padding: "10px 20px" }}>
         Logout
       </button>
+
+      <a href="/map">MAP</a>
     </div>
   );
 }
