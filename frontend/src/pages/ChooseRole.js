@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../styles/ChooseRole.css";
 
 export default function ChooseRole() {
   const [role, setRole] = useState("user");
@@ -14,7 +15,6 @@ export default function ChooseRole() {
     }
 
     try {
-      // Provjera emaila
       const check = await axios.post("http://localhost:4000/check-email", { email },
   { withCredentials: true });
       if (check.data.exists) {
@@ -22,7 +22,6 @@ export default function ChooseRole() {
         return;
       }
 
-      // Ako ne postoji, ide se na Google OAuth registraciju
       const params = new URLSearchParams({ role, firstName, lastName });
       window.location.href = `http://localhost:4000/auth/google?${params.toString()}`;
     } catch (err) {
@@ -36,67 +35,71 @@ export default function ChooseRole() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1>Registracija / Prijava u TravelMate</h1>
+    <div className="choose-role-main">
 
-      <div style={{ marginBottom: "15px" }}>
-        <input
-          type="text"
-          placeholder="Ime"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          style={{ padding: "8px", marginRight: "10px" }}
-        />
-        <input
-          type="text"
-          placeholder="Prezime"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          style={{ padding: "8px", marginRight: "10px" }}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ padding: "8px" }}
-        />
+      <div className="sign-in-part">
+
+
+          <div className="welcome-back">WELCOME BACK!</div>
+    
+          <button className="login-button" onClick={handleLogin}>
+           SIGN IN.
+          </button>
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <label>
+      <div className="sign-up-part">
+          <div className="create-an-account">CREATE AN ACCOUNT!</div>
+
+        <div className="choose-role-inputs">
           <input
-            type="radio"
-            name="role"
-            value="user"
-            checked={role === "user"}
-            onChange={() => setRole("user")}
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
-          User
-        </label>
-        <label style={{ marginLeft: "20px" }}>
           <input
-            type="radio"
-            name="role"
-            value="admin"
-            checked={role === "admin"}
-            onChange={() => setRole("admin")}
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
           />
-          Admin
-        </label>
-      </div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button onClick={handleRegister} style={{ padding: "10px 20px", marginBottom: "10px" }}>
-          Registriraj se
-        </button>
-      </div>
+        <div className="choose-role-radio">
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="user"
+              checked={role === "user"}
+              onChange={() => setRole("user")}
+            />
+            User
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="admin"
+              checked={role === "admin"}
+              onChange={() => setRole("admin")}
+            />
+            Admin
+          </label>
+        </div>
 
-      <div>
-        <button onClick={handleLogin} style={{ padding: "10px 20px" }}>
-          Već imaš račun? Loginaj se
-        </button>
+          <button className="sign-up-button" onClick={handleRegister}>
+            SIGN UP.
+          </button>
+
       </div>
+      
     </div>
   );
 }
