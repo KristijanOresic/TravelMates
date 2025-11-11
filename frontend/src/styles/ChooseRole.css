@@ -1,24 +1,19 @@
-body{
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #fafafa;  
+.choose-role-main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  box-shadow: 1px 1px 20px gray;
+  border-radius: 15px;
+  height: 70vh;
+  width: 80vw;
 }
 
-.choose-role-main{
-    position: relative;
-    display: flex;
-    box-shadow: 1px 1px 20px gray;
-    border-radius: 15px;
-    height: 70vh;
-}
 
 .sign-in-part{
     position: relative;
-    background-color: lightblue;
+    background-color: navy;
     padding: 20px;
     width: 50%;
     border-top-left-radius: 15px;
@@ -42,7 +37,7 @@ body{
     background-color: white;
     padding: 10px;
     font-size: 15px;
-    color: lightblue;
+    color: navy;
     border-radius: 15px;
     transition: all 0.3s ease;
         box-shadow: 1px 1px 5px gray;
@@ -72,7 +67,7 @@ body{
 .create-an-account{
     position: relative;
     font-size: 30px;
-    color: lightblue;
+    color: navy;
     font-weight: 500;
 }
 
@@ -128,7 +123,7 @@ body{
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid lightblue;
+  border: 2px solid navy;
   border-radius: 50%;
   outline: none;
   cursor: pointer;
@@ -136,13 +131,13 @@ body{
 }
 
 .choose-role-radio input[type="radio"]:checked {
-  border-color: lightblue;
-  background-color: lightblue;
+  border-color: navy;
+  background-color: navy;
 }
 
 .sign-up-button{
     border: none;
-    background-color: lightblue;
+    background-color: navy;
     padding: 10px;
     font-size: 15px;
     color: white;
@@ -159,17 +154,19 @@ body{
 
 
 @media (max-width: 768px) {
-    body {
-        height: auto;
-        padding: 20px;
-        align-items: flex-start;
+
+    body{
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-    
-    .choose-role-main {
+
+    .choose-role-main{
         flex-direction: column;
-        height: auto;
-        width: 90%;
     }
+
     
     .sign-in-part,
     .sign-up-part {
@@ -177,16 +174,7 @@ body{
         border-radius: 15px;
         padding: 30px 20px;
     }
-    
-    .sign-in-part {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-    
-    .sign-up-part {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
+
     
     .welcome-back,
     .create-an-account {

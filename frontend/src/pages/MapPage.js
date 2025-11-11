@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import "../styles/MapPage.css";
 
 export default function App() {
   const mapRef = useRef(null);
@@ -21,6 +22,30 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Custom map style - micanje elemenata
+    const customMapStyle = [
+      {
+        "featureType": "poi",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "road",
+        "stylers": [{ "visibility": "simplified" }]
+      },
+      {
+        "featureType": "landscape",
+        "stylers": [{ "visibility": "simplified" }]
+      },
+      {
+        "elementType": "labels",
+        "stylers": [{ "visibility": "off" }]
+      }
+    ];
+
     // Učitaj Google Maps API
     const loadGoogleMaps = () => {
       return new Promise((resolve) => {
@@ -57,6 +82,12 @@ export default function App() {
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: hasLocation ? 10 : 7,
         center: position,
+        styles: customMapStyle,
+        mapTypeControl: false, // Remove map type control (satellite/terrain buttons)
+        streetViewControl: false, // Remove street view control
+        fullscreenControl: false, // Remove fullscreen control
+        zoomControl: true, // Keep zoom control
+        gestureHandling: "greedy" // Better mobile handling
       });
 
       // Dohvati znamenitosti s backend API-ja
@@ -167,11 +198,13 @@ export default function App() {
 
   return (
     <div>
-      <h2 style={{ textAlign: "center" }}>Znamenitosti</h2>
+      <div className="map-page-header">
+        <a className="back-home-button" href="/user">BACK HOME</a>
+      </div>
+
       <div
         id="map"
         ref={mapRef}
-        style={{ height: "100vh", width: "100%" }}
       ></div>
     </div>
   );
