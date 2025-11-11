@@ -53,9 +53,9 @@ export default function App() {
           resolve();
           return;
         }
+        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
         const script = document.createElement("script");
-        script.src =
-          "https://maps.googleapis.com/maps/api/js?key=AIzaSyD8KE0YzHUf2UvPPRGCER0fmJS-e70jGkk";
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
         script.async = true;
         script.defer = true;
         script.onload = async () => {
