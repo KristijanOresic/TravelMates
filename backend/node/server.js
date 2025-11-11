@@ -8,6 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config(); 
+import attractionsRouter from "./routes/attractions.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/api/attractions", attractionsRouter);
 
 passport.serializeUser((user, done) => done(null, user.id));
 
