@@ -43,7 +43,7 @@ export default function ChooseRole() {
           <div className="welcome-back">WELCOME BACK!</div>
     
           <button className="login-button" onClick={handleLogin}>
-           SIGN IN.
+           LOG IN
           </button>
       </div>
 
@@ -95,7 +95,7 @@ export default function ChooseRole() {
         </div>
 
           <button className="sign-up-button" onClick={handleRegister}>
-            SIGN UP.
+            SIGN UP
           </button>
 
       </div>

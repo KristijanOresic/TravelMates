@@ -4,10 +4,16 @@ import LoginSuccess from "./LoginSuccess";
 import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
 import MapPage from "./pages/MapPage";
+import "./App.css";
 
 function App() {
   return (
     <Router>
+      <img 
+        src="/travelmateLogo.png"       
+        alt="Logo"
+        className="top-left-logo"
+      />
       <Routes>
         <Route path="/" element={<ChooseRole />} />
         <Route path="/login-success" element={<LoginSuccess />} />
