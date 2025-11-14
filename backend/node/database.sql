@@ -9,7 +9,6 @@ CREATE TABLE users (
     firstName VARCHAR(20),
     lastName VARCHAR(20),
     email VARCHAR(30) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
     role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'admin'))
 );
 
