@@ -1,0 +1,72 @@
+
+
+#map {
+    position: relative;
+    width: 100vw;
+    height: 90vh;
+    box-sizing: border-box;
+}
+
+.map-page-header {
+    position: relative;
+    height: 125px;
+    width: 100vw;
+    background-color: #fafafa;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.back-home-button {
+    text-decoration: none;
+    position: relative;
+    left: 10%;
+    background-color: lightblue;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.back-home-button:hover {
+    transform: scale(1.1);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    body {
+        overflow: hidden; /* Ensure no scrolling on mobile */
+    }
+    
+    #map {
+        height: 90vh;
+        width: 100vw;
+        position: fixed; /* Fix map position */
+        top: 10vh;
+        left: 0;
+    }
+
+    .map-page-header {
+        position: fixed; /* Fix header position */
+        top: 0;
+        left: 0;
+        z-index: 1000; /* Ensure header is above map */
+        height: 10vh;
+        width: 100vw;
+    }
+}
+
+/* Additional CSS to ensure no scrolling */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}

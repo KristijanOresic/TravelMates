@@ -1,22 +1,27 @@
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ChooseRole from "./pages/ChooseRole";
+import LoginSuccess from "./LoginSuccess";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
+import MapPage from "./pages/MapPage";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="logo-container">
-        <img
-          src={`${process.env.PUBLIC_URL}/travelmateLogo.png`}
-          alt="TravelMate Logo"
-          className="logo"
-        />
-        <h1 className="app-title">TravelMate</h1>
-        
-        <button className="loginButton">Login</button>
-      
-      </div>
-      </header>
-    </div>
+    <Router>
+      <img 
+        src="/travelmateLogo.png"       
+        alt="Logo"
+        className="top-left-logo"
+      />
+      <Routes>
+        <Route path="/" element={<ChooseRole />} />
+        <Route path="/login-success" element={<LoginSuccess />} />
+        <Route path="/user" element={<UserPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/map" element={<MapPage />} />
+      </Routes>
+    </Router>
   );
 }
 

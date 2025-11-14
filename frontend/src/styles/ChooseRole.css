@@ -1,0 +1,188 @@
+.choose-role-main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  box-shadow: 1px 1px 20px gray;
+  border-radius: 15px;
+  height: 70vh;
+  width: 80vw;
+}
+
+
+.sign-in-part{
+    position: relative;
+    background-color: rgb(10, 69, 79);
+    padding: 20px;
+    width: 50%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+.welcome-back{
+    position: relative;
+    font-size: 30px;
+    color: white;
+    font-weight: 500;
+}
+
+.login-button{
+    border: none;
+    background-color: white;
+    padding: 10px;
+    font-size: 15px;
+    color: rgb(10, 69, 79);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+        box-shadow: 1px 1px 5px gray;
+
+}
+
+.login-button:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.sign-up-part{
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    width: 50%;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    text-align: center;
+}
+
+.create-an-account{
+    position: relative;
+    font-size: 30px;
+    color: rgb(10, 69, 79);
+    font-weight: 500;
+}
+
+.choose-role-inputs{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.choose-role-inputs input {
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px gray solid;
+    outline: none;
+}
+
+.choose-role-inputs input:focus {
+    outline: none;
+    border: 1px gray solid;
+    box-shadow: none;
+}
+
+.choose-role-inputs input:hover {
+    border: 1px gray solid;
+}
+
+.choose-role-inputs input:active {
+    border: 1px gray solid;
+}
+
+.choose-role-inputs input:checked {
+    border: 1px gray solid;
+}
+
+.choose-role-radio {
+  display: flex;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.choose-role-radio label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.choose-role-radio input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgb(10, 69, 79);;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.choose-role-radio input[type="radio"]:checked {
+  border-color: rgb(10, 69, 79);
+  background-color: rgb(10, 69, 79);;
+}
+
+.sign-up-button{
+    border: none;
+    background-color: rgb(10, 69, 79);
+    padding: 10px;
+    font-size: 15px;
+    color: white;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+        box-shadow: 1px 1px 5px gray;
+}
+
+.sign-up-button:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+
+
+@media (max-width: 768px) {
+
+    body{
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .choose-role-main{
+        flex-direction: column;
+    }
+
+    
+    .sign-in-part,
+    .sign-up-part {
+        width: 100%;
+        border-radius: 15px;
+        padding: 30px 20px;
+    }
+
+    
+    .welcome-back,
+    .create-an-account {
+        font-size: 24px;
+    }
+    
+    .choose-role-radio {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
