@@ -9,20 +9,19 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config(); 
 import attractionsRouter from "./routes/attractions.js";
+import adminRouter from "./routes/admin.js";
 
 const app = express();
 
-// PostgreSQL pool
 const pool = new pg.Pool({
   user: process.env.DB_USER,
-  host: process.env.DB_HOST,      // "db" unutar Docker-a
+  host: process.env.DB_HOST,    
   database: process.env.DB_NAME,
   password: process.env.DB_PASS,
   port: process.env.DB_PORT,
 });
 
 
-// Konstante
 const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -42,6 +41,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/attractions", attractionsRouter);
+app.use("/api/admin", adminRouter);
 
 passport.serializeUser((user, done) => done(null, user.id));
 
@@ -70,15 +70,12 @@ passport.use(
         const firstName = req.session.firstName || profile.name?.givenName || "";
         const lastName = req.session.lastName || profile.name?.familyName || "";
 
-        // provjera postoji li korisnik
         const existing = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
         let user;
 
         if (existing.rows.length > 0) {
-           // Postojeći korisnik - zadrži postojeću rolu
            user = existing.rows[0];
         } else {
-           // Novi korisnik - koristi rolu iz forme/sessiona
            const insert = await pool.query(
            `INSERT INTO users (email, first_name, last_name, oauth_provider, oauth_id, role)
             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
@@ -96,7 +93,7 @@ passport.use(
     }
   )
 );
-// Provjera postoji li email
+
 app.post("/check-email", async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: "Email je obavezan" });
@@ -115,8 +112,6 @@ app.post("/check-email", async (req, res) => {
 });
 
 
-
-// Ruta koja sprema ime, prezime i rolu u session prije redirecta na Google login
 app.get("/auth/google", (req, res, next) => {
   const role = req.query.role || "user";
   const firstName = req.query.firstName || "";
@@ -129,19 +124,17 @@ app.get("/auth/google", (req, res, next) => {
   passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
 });
 
-// Callback ruta nakon uspješne prijave
+
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login/failed" }),
   (req, res) => {
-    // Kreiraj JWT
     const token = jwt.sign(
       { id: req.user.id, email: req.user.email, role: req.user.role },
       SESSION_SECRET,
       { expiresIn: "1h" }
     );
 
-    // Postavi cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: false, 
@@ -154,8 +147,6 @@ app.get(
 
 app.get("/login/failed", (req, res) => res.status(401).send("Login failed"));
 
-// Ruta koja vraća trenutnog korisnika
-// Ruta koja vraća trenutnog korisnika
 app.get("/me", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Not logged in" });
@@ -163,7 +154,6 @@ app.get("/me", (req, res) => {
   try {
     const user = jwt.verify(token, SESSION_SECRET);
     
-    // Get complete user data from database including first name
     pool.query("SELECT id, email, role, first_name, last_name FROM users WHERE id=$1", [user.id])
       .then(result => {
         if (result.rows.length > 0) {
@@ -191,10 +181,8 @@ app.get("/me", (req, res) => {
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
   req.session.destroy(() => {
-    res.json({ message: "Logged out" }); // samo šaljemo JSON
+    res.json({ message: "Logged out" }); 
   });
 });
 
-
-
-app.listen(4000, () => console.log(" Server running on http://localhost:4000"));
+app.listen(4000, () => console.log(" Server running on http://localhost:3000"));
