@@ -34,7 +34,7 @@ export default function App() {
         setUserFavorites(data.map(fav => fav.id || fav.idAttraction));
       }
     } catch (err) {
-      console.error("Error fetching favorites:", err);
+      console.error("Greška pri učitavanju favorita:", err);
     }
   };
 
@@ -55,10 +55,10 @@ export default function App() {
           favBtn.textContent = "❤️";
         }
       } else {
-        console.error("Failed to add favorite:", res.statusText);
+        console.error("Neuspjelo dodavanje u favorite:", res.statusText);
       }
     } catch (err) {
-      console.error("Error adding favorite:", err);
+      console.error("Greška pri dodavanju u favorite:", err);
     }
   };
 
@@ -77,10 +77,10 @@ export default function App() {
           favBtn.textContent = "🤍";
         }
       } else {
-        console.error("Failed to remove favorite:", res.statusText);
+        console.error("Neuspjelo uklanjanje iz favorita:", res.statusText);
       }
     } catch (err) {
-      console.error("Error removing favorite:", err);
+      console.error("Greška pri uklanjanju iz favorita:", err);
     }
   };
 
@@ -293,7 +293,7 @@ export default function App() {
   return (
     <div className="map-page-container"> 
       <div className="map-page-header">
-        <a className="back-home-button" href="/user">BACK HOME</a>
+        <a className="back-home-button" href="/user">POVRATAK NA POČETNU STRANICU</a>
         <button className="favorites-button" onClick={() => alert(`Favoriti: ${userFavorites.length}`)}>
           ❤️ {userFavorites.length}
         </button>

@@ -20,7 +20,7 @@ export default function EditorPage() {
           credentials: "include",
         });
 
-        if (!res.ok) throw new Error("Not logged in");
+        if (!res.ok) throw new Error("Niste prijavljeni!");
 
         const data = await res.json();
         setUserData(data);
@@ -49,7 +49,7 @@ export default function EditorPage() {
     e.preventDefault();
 
     if (!name || !description || !locationLat || !locationLng) {
-      setError("All fields are required");
+      setError("Sva polja su obavezna!");
       return;
     }
 
@@ -57,17 +57,17 @@ export default function EditorPage() {
     const lng = parseFloat(locationLng);
 
     if (isNaN(lat) || isNaN(lng)) {
-      setError("Coordinates must be valid numbers");
+      setError("Koordinate moraju biti valjani brojevi!");
       return;
     }
 
     if (lat < -90 || lat > 90) {
-      setError("Latitude must be between -90 and 90");
+      setError("Geografska širina mora biti između -90 i 90!");
       return;
     }
 
     if (lng < -180 || lng > 180) {
-      setError("Longitude must be between -180 and 180");
+      setError("Geografska širina mora biti između -180 i 180!");
       return;
     }
 
@@ -86,7 +86,7 @@ export default function EditorPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        setError(errorData.error || "Failed to add attraction");
+        setError(errorData.error || "Neuspjelo dodavanje znamenitosti!");
         return;
       }
 
@@ -98,7 +98,7 @@ export default function EditorPage() {
       setLocationLng("");
       setError("");
     } catch (err) {
-      setError("Failed to add attraction");
+      setError("Neuspjelo dodavanje znamenitosti!");
     }
   };
 
@@ -121,7 +121,7 @@ export default function EditorPage() {
   };
 
   const deleteAttraction = async id => {
-    if (!window.confirm("Delete attraction?")) return;
+    if (!window.confirm("Obrisati znamenitost?")) return;
 
     await fetch(`http://localhost:4000/api/attractions/${id}`, {
       method: "DELETE",
@@ -138,36 +138,36 @@ export default function EditorPage() {
     window.location.href = "/";
   };
 
-  if (loading) return <h2 className="center">Loading...</h2>;
-  if (!userData) return <h2 className="center">Not logged in</h2>;
+  if (loading) return <h2 className="center">Učitavanje...</h2>;
+  if (!userData) return <h2 className="center">Niste prijavljeni</h2>;
   if (!["editor", "admin"].includes(userData.role))
-    return <h2 className="center">Access denied</h2>;
+    return <h2 className="center">Pristup odbijen</h2>;
 
   return (
     <div className="editor-container">
-      <h1>Editor panel</h1>
+      <h1>Uređivačka ploča</h1>
 
       <p>
-        Logged in as <b>{userData.firstName}</b> ({userData.role})
+        Prijavljeni kao <b>{userData.firstName}</b> ({userData.role})
       </p>
 
       {error && <p className="error">{error}</p>}
 
       <button className="logout-btn" onClick={logout}>
-        Logout
+        Odjava
       </button>
 
-      <h2>Add attraction</h2>
+      <h2>Dodajte znamenitost</h2>
 
       <form onSubmit={addAttraction} className="add-form">
         <input
-          placeholder="Name"
+          placeholder="Naziv"
           value={name}
           onChange={e => setName(e.target.value)}
         />
 
         <textarea
-          placeholder="Description"
+          placeholder="Opis"
           value={description}
           onChange={e => setDescription(e.target.value)}
         />
@@ -176,29 +176,29 @@ export default function EditorPage() {
           <input
             type="number"
             step="any"
-            placeholder="Latitude"
+            placeholder="Geografska širina"
             value={locationLat}
             onChange={e => setLocationLat(e.target.value)}
           />
           <input
             type="number"
             step="any"
-            placeholder="Longitude"
+            placeholder="Geografska dužina"
             value={locationLng}
             onChange={e => setLocationLng(e.target.value)}
           />
         </div>
 
-        <button>Add</button>
+        <button>Dodaj</button>
       </form>
 
       <hr />
 
-      <h2>Attractions ({attractions.length})</h2>
+      <h2>Znamenitosti ({attractions.length})</h2>
 
       <div className="attractions-list">
         {attractions.length === 0 ? (
-          <p className="empty">No attractions yet</p>
+          <p className="empty">Nema dodanih znamenitosti</p>
         ) : (
           attractions.map(a => (
             <div key={a.id} className="attraction-card">
@@ -244,7 +244,7 @@ export default function EditorPage() {
                 className="delete-btn"
                 onClick={() => deleteAttraction(a.id)}
               >
-                Delete
+                Obriši
               </button>
             </div>
           ))

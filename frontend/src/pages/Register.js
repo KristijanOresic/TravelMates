@@ -41,7 +41,7 @@ export default function Register() {
         { withCredentials: true }
       );
       if (check.data.exists) {
-        alert("Ovaj email već postoji! Molimo loginaj se.");
+        alert("Ovaj email već postoji! Molimo prijavite se.");
         return;
       }
 
@@ -50,7 +50,7 @@ export default function Register() {
       window.location.href = `http://localhost:4000/auth/google?${params.toString()}`;
     } catch (err) {
       console.error(err);
-      alert("Greška pri provjeri emaila");
+      alert("Greška pri provjeri emaila!");
     }
   };
 
@@ -61,25 +61,25 @@ export default function Register() {
   return (
     <div className="choose-role-main">
       <div className="sign-in-part">
-        <div className="welcome-back">WELCOME BACK!</div>
+        <div className="welcome-back">DOBRO DOŠLI NATRAG!</div>
         <button className="login-button" onClick={handleLogin}>
-          LOG IN
+          PRIJAVA
         </button>
       </div>
 
       <div className="sign-up-part">
-        <div className="create-an-account">CREATE AN ACCOUNT!</div>
+        <div className="create-an-account">IZRADITE RAČUN!</div>
 
         <div className="choose-role-inputs">
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Ime"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="Prezime"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
@@ -92,7 +92,7 @@ export default function Register() {
         </div>
 
         <button className="sign-up-button" onClick={handleRegister}>
-          SIGN UP
+          REGISTRACIJA
         </button>
       </div>
     </div>

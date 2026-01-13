@@ -18,10 +18,10 @@ export default function UserPage() {
           const data = await res.json();
           setUserData(data);
         } else {
-          console.error("Failed to fetch user data");
+          console.error("Neuspješno dohvaćanje korisničkih podataka!");
         }
       } catch (err) {
-        console.error("Error fetching user data:", err);
+        console.error("Greška pri dohvaćanju korisničkih podataka:", err);
       } finally {
         setLoading(false);
       }
@@ -43,7 +43,7 @@ export default function UserPage() {
           setFavorites(data);
         }
       } catch (err) {
-        console.error("Error fetching favorites:", err);
+        console.error("Greška pri dohvaćanju favorita:", err);
       }
     };
 
@@ -62,11 +62,11 @@ export default function UserPage() {
       if (res.ok) {
         window.location.href = "/";
       } else {
-        alert("Logout failed");
+        alert("Odjava nije uspjela");
       }
     } catch (err) {
       console.error(err);
-      alert("Došlo je do greške prilikom odjave");
+      alert("Došlo je do greške prilikom odjave!");
     }
   };
 
@@ -80,15 +80,15 @@ export default function UserPage() {
       if (res.ok) {
         setFavorites(favorites.filter(fav => fav.id !== favoriteId));
       } else {
-        alert("Greška pri brisanju favorita");
+        alert("Greška pri uklanjanju iz favorita!");
       }
     } catch (err) {
-      console.error("Error removing favorite:", err);
+      console.error("Greška pri uklanjanju favorita:", err);
     }
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Učitavanje...</div>;
   }
 
   return (
@@ -110,10 +110,10 @@ export default function UserPage() {
           </div>
         </div>
 
-        <a href="/map" className="map-link">Otvori mapu</a>
+        <a href="/map" className="map-link">Otvori kartu</a>
         
         <button onClick={handleLogout} className="logout-btn">
-          Logout
+          Odjava
         </button>
       </div>
 
@@ -136,7 +136,7 @@ export default function UserPage() {
             ))}
           </div>
         ) : (
-          <p className="no-favorites">Nemaš omiljenih lokaliteta. Dodaj neke na mapi!</p>
+          <p className="no-favorites">Nemate omiljenih lokaliteta. Dodajte neke na mapi!</p>
         )}
       </div>
     </div>

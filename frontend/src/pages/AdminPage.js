@@ -14,7 +14,7 @@ export default function AdminPage() {
           credentials: "include",
         });
 
-        if (!res.ok) throw new Error("Not authenticated");
+        if (!res.ok) throw new Error("Nije autentificiran");
 
         const data = await res.json();
         setUserData(data);
@@ -51,7 +51,7 @@ export default function AdminPage() {
   };
 
   const deleteUser = async id => {
-    if (!window.confirm("Are you sure?")) return;
+    if (!window.confirm("Jeste li sigurni da želite obrisati korisnika?")) return;
 
     await fetch(`http://localhost:4000/api/admin/users/${id}`, {
       method: "DELETE",
@@ -69,40 +69,40 @@ export default function AdminPage() {
   };
 
   if (loading) {
-    return <div className="loading"><h2>Loading...</h2></div>;
+    return <div className="loading"><h2>Učitavanje...</h2></div>;
   }
 
   if (!userData) {
-    return <div className="not-logged"><h2>Not logged in</h2></div>;
+    return <div className="not-logged"><h2>Niste prijavljeni</h2></div>;
   }
 
   if (userData.role !== "admin") {
-    return <div className="access-denied"><h2>Access denied</h2></div>;
+    return <div className="access-denied"><h2>Pristup odbijen</h2></div>;
   }
 
   return (
     <div className="admin-container">
-      <h1>Admin panel</h1>
+      <h1>Administratorska ploča</h1>
 
       <div className="admin-info">
         <p>
-          Logged in as <b>{userData.firstName}</b> ({userData.email})
+          Prijavljeni kao <b>{userData.firstName}</b> ({userData.email})
         </p>
       </div>
 
       <button onClick={logout} className="logout-btn">
-        Logout
+        Odjava
       </button>
 
-      <h2>Users</h2>
+      <h2>Korisnici</h2>
 
       <table className="admin-table">
         <thead>
           <tr>
             <th>Email</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Actions</th>
+            <th>Ime</th>
+            <th>Uloga</th>
+            <th>Akcije</th>
           </tr>
         </thead>
 
@@ -118,13 +118,13 @@ export default function AdminPage() {
                   value={u.role}
                   onChange={e => changeRole(u.id, e.target.value)}
                 >
-                  <option value="user">user</option>
-                  <option value="editor">editor</option>
-                  <option value="admin">admin</option>
+                  <option value="user">Korisnik</option>
+                  <option value="editor">Uređivač</option>
+                  <option value="admin">Administrator</option>
                 </select>
               </td>
               <td>
-                <button onClick={() => deleteUser(u.id)} className="delete-btn">Delete</button>
+                <button onClick={() => deleteUser(u.id)} className="delete-btn">Obriši</button>
               </td>
             </tr>
           ))}

@@ -46,7 +46,7 @@ export default function ChooseRole() {
       setIsUnlocked(true);
       setPassword("");
     } else {
-      alert("Wrong password!");
+      alert("Pogrešna lozinka!");
       setPassword("");
     }
   };
@@ -56,17 +56,17 @@ export default function ChooseRole() {
     return (
       <div className="choose-role-main">
         <div className="sign-up-part">
-          <div className="create-an-account">ADMIN ACCESS</div>
+          <div className="create-an-account">PRISTUP ZA ADMINA</div>
 
           <form onSubmit={handleUnlock} className="choose-role-inputs">
             <input
               type="password"
-              placeholder="Admin Password"
+              placeholder="Admin Lozinka"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <button type="submit" className="sign-up-button">
-              UNLOCK
+              OTKLJUČAJ
             </button>
           </form>
         </div>
@@ -88,7 +88,7 @@ export default function ChooseRole() {
       );
 
       if (check.data.exists) {
-        alert("Ovaj email već postoji! Molimo loginaj se.");
+        alert("Ovaj email već postoji! Molimo prijavite se.");
         return;
       }
 
@@ -96,7 +96,7 @@ export default function ChooseRole() {
       window.location.href = `http://localhost:4000/auth/google?${params.toString()}`;
     } catch (err) {
       console.error(err);
-      alert("Greška pri provjeri emaila");
+      alert("Greška pri provjeri emaila!");
     }
   };
 
@@ -107,25 +107,25 @@ export default function ChooseRole() {
   return (
     <div className="choose-role-main">
       <div className="sign-in-part">
-        <div className="welcome-back">WELCOME BACK!</div>
+        <div className="welcome-back">DOBRO DOŠLI NATRAG!</div>
         <button className="login-button" onClick={handleLogin}>
-          LOG IN
+          PRIJAVA
         </button>
       </div>
 
       <div className="sign-up-part">
-        <div className="create-an-account">CREATE AN ACCOUNT!</div>
+        <div className="create-an-account">IZRADITE RAČUN!</div>
 
         <div className="choose-role-inputs">
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Ime"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="Prezime"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
@@ -146,7 +146,7 @@ export default function ChooseRole() {
               checked={role === "user"}
               onChange={() => setRole("user")}
             />
-            User
+            Korisnik
           </label>
 
           <label>
@@ -157,7 +157,7 @@ export default function ChooseRole() {
               checked={role === "editor"}
               onChange={() => setRole("editor")}
             />
-            Editor
+            Uređivač
           </label>
 
           <label>
@@ -168,12 +168,12 @@ export default function ChooseRole() {
               checked={role === "admin"}
               onChange={() => setRole("admin")}
             />
-            Admin
+            Administrator
           </label>
         </div>
 
         <button className="sign-up-button" onClick={handleRegister}>
-          SIGN UP
+          REGISTRACIJA
         </button>
       </div>
     </div>
