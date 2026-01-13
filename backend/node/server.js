@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 dotenv.config(); 
 import attractionsRouter from "./routes/attractions.js";
 import adminRouter from "./routes/admin.js";
+import favoritesRouter from "./routes/favorites.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/attractions", attractionsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/favorites", favoritesRouter);
 
 passport.serializeUser((user, done) => done(null, user.id));
 

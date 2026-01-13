@@ -6,6 +6,7 @@ import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
 import EditorPage from "./pages/EditorPage";
 import MapPage from "./pages/MapPage";
+import FavoritesPage from "./pages/FavoritesPage";
 import "./App.css";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/editor" element={<EditorPage />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
     </Router>
   );

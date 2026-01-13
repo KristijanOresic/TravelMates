@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/UserPage.css";
 
 export default function UserPage() {
@@ -6,85 +6,60 @@ export default function UserPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // === USER DATA ===
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUser = async () => {
       try {
         const res = await fetch("http://localhost:4000/me", {
-          method: "GET",
           credentials: "include",
         });
-
         if (res.ok) {
-          const data = await res.json();
-          setUserData(data);
-        } else {
-          console.error("Neuspješno dohvaćanje korisničkih podataka!");
+          setUserData(await res.json());
         }
       } catch (err) {
-        console.error("Greška pri dohvaćanju korisničkih podataka:", err);
-      } finally {
-        setLoading(false);
+        console.error(err);
       }
     };
 
-    fetchUserData();
+    fetchUser();
   }, []);
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setFavorites(data);
-        }
-      } catch (err) {
-        console.error("Greška pri dohvaćanju favorita:", err);
-      }
-    };
-
-    if (userData) {
-      fetchFavorites();
-    }
-  }, [userData]);
-
-  const handleLogout = async () => {
+  // === FAVORITES ===
+  const fetchFavorites = async () => {
     try {
-      const res = await fetch("http://localhost:4000/logout", {
-        method: "GET",
+      const res = await fetch("http://localhost:4000/api/favorites", {
         credentials: "include",
       });
-
       if (res.ok) {
-        window.location.href = "/";
-      } else {
-        alert("Odjava nije uspjela");
+        const data = await res.json();
+        setFavorites(Array.isArray(data) ? data : []);
       }
     } catch (err) {
-      console.error(err);
-      alert("Došlo je do greške prilikom odjave!");
+      console.error("Fetch favorites error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleRemoveFavorite = async (favoriteId) => {
-    try {
-      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${favoriteId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
 
-      if (res.ok) {
-        setFavorites(favorites.filter(fav => fav.id !== favoriteId));
-      } else {
-        alert("Greška pri uklanjanju iz favorita!");
-      }
-    } catch (err) {
-      console.error("Greška pri uklanjanju favorita:", err);
-    }
+  // === REMOVE FAVORITE ===
+  const removeFavorite = async (id) => {
+    await fetch(`http://localhost:4000/api/favorites/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    setFavorites(prev => prev.filter(f => f.id !== id));
+  };
+
+  const handleLogout = async () => {
+    await fetch("http://localhost:4000/logout", {
+      credentials: "include",
+    });
+    window.location.href = "/";
   };
 
   if (loading) {
@@ -93,50 +68,60 @@ export default function UserPage() {
 
   return (
     <div className="user-page">
+      {/* ===== PROFILE ===== */}
       <div className="profile-container">
         <div className="profile-header">
           <h1>{userData?.firstName} {userData?.lastName}</h1>
-          <p className="role-badge">{userData?.role}</p>
+          <span className="role-badge">{userData?.role}</span>
         </div>
 
         <div className="profile-info">
           <div className="info-item">
-            <label>Email:</label>
+            <label>Email</label>
             <p>{userData?.email}</p>
           </div>
+
           <div className="info-item">
-            <label>Uloga:</label>
+            <label>Uloga</label>
             <p>{userData?.role}</p>
           </div>
         </div>
 
         <a href="/map" className="map-link">Otvori kartu</a>
-        
+
         <button onClick={handleLogout} className="logout-btn">
           Odjava
         </button>
       </div>
 
+      {/* ===== FAVORITES ===== */}
       <div className="favorites-container">
         <h2>Moji omiljeni lokaliteti</h2>
-        {favorites && favorites.length > 0 ? (
+
+        {favorites.length === 0 ? (
+          <p className="no-favorites">
+            Nemate omiljenih lokaliteta. Dodajte ih na mapi ❤️
+          </p>
+        ) : (
           <div className="favorites-grid">
-            {favorites.map((fav) => (
-              <div key={fav.id} className="favorite-card">
-                <h3>{fav.name}</h3>
-                <p>{fav.description}</p>
-                <p className="location">{fav.location}</p>
-                <button 
-                  onClick={() => handleRemoveFavorite(fav.id)}
+            {favorites.map(f => (
+              <div key={f.id} className="favorite-card">
+                <h3>{f.name}</h3>
+                <p>{f.description}</p>
+
+                <p className="location">
+                  📍 {f.location_lat}, {f.location_lng}
+                </p>
+
+                <button
                   className="remove-btn"
+                  onClick={() => removeFavorite(f.id)}
                 >
                   Ukloni iz omiljenih
                 </button>
               </div>
             ))}
           </div>
-        ) : (
-          <p className="no-favorites">Nemate omiljenih lokaliteta. Dodajte neke na mapi!</p>
         )}
       </div>
     </div>
