@@ -1,11 +1,11 @@
 import express from "express";
 import pg from "pg";
 import dotenv from "dotenv";
+import { requireAuth, requireEditor } from "../middleware/auth.js";
 dotenv.config();
 
 const router = express.Router();
 
-// PostgreSQL pool
 const pool = new pg.Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -22,6 +22,75 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error("Greška kod dohvaćanja znamenitosti:", err);
     res.status(500).json({ error: "Greška na serveru" });
+  }
+});
+
+// Dodavanje znamenitosti
+router.post("/", requireAuth, requireEditor, async (req, res) => {
+  const { name, description, location_lat, location_lng } = req.body;
+
+  // Validacija
+  if (!name || !description || location_lat === undefined || location_lng === undefined) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const lat = parseFloat(location_lat);
+  const lng = parseFloat(location_lng);
+
+  if (isNaN(lat) || isNaN(lng)) {
+    return res.status(400).json({ error: "Invalid coordinates" });
+  }
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO attractions (name, description, location_lat, location_lng) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, description, lat, lng]
+    );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Insert error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Ažuriranje znamenitosti
+router.put("/:id", requireAuth, requireEditor, async (req, res) => {
+  const { name, description, location_lat, location_lng } = req.body;
+
+  // Validacija
+  if (!name || !description || location_lat === undefined || location_lng === undefined) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const lat = parseFloat(location_lat);
+  const lng = parseFloat(location_lng);
+
+  if (isNaN(lat) || isNaN(lng)) {
+    return res.status(400).json({ error: "Invalid coordinates" });
+  }
+
+  try {
+    await pool.query(
+      "UPDATE attractions SET name=$1, description=$2, location_lat=$3, location_lng=$4 WHERE id=$5",
+      [name, description, lat, lng, req.params.id]
+    );
+
+    res.json({ message: "Updated" });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Brisanje znamenitosti
+router.delete("/:id", requireAuth, requireEditor, async (req, res) => {
+  try {
+    await pool.query("DELETE FROM attractions WHERE id=$1", [req.params.id]);
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ error: "Database error" });
   }
 });
 
