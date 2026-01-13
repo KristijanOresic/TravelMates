@@ -8,11 +8,16 @@ export default function LoginSuccess() {
   useEffect(() => {
     axios.get("http://localhost:4000/me", { withCredentials: true })
       .then(res => {
-        if (res.data.role === "admin") navigate("/admin");
-        else navigate("/user");
+        if (res.data.role === "admin") {
+          navigate("/admin");
+        } else if (res.data.role === "editor") {
+          navigate("/editor");
+        } else {
+          navigate("/user");
+        }
       })
       .catch(() => {
-        navigate("/"); // nije login
+        navigate("/"); 
       });
   }, [navigate]);
 

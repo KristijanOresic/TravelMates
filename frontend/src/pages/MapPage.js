@@ -22,7 +22,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Custom map style - micanje elemenata
     const customMapStyle = [
       {
         "featureType": "poi",
@@ -46,7 +45,6 @@ export default function App() {
       }
     ];
 
-    // Učitaj Google Maps API
     const loadGoogleMaps = () => {
       return new Promise((resolve) => {
         if (window.google && window.google.maps) {
@@ -59,7 +57,6 @@ export default function App() {
         script.async = true;
         script.defer = true;
         script.onload = async () => {
-          // kratka odgoda da se osigura inicijalizacija
           await new Promise((r) => setTimeout(r, 300));
           resolve();
         };
@@ -83,14 +80,13 @@ export default function App() {
         zoom: hasLocation ? 10 : 7,
         center: position,
         styles: customMapStyle,
-        mapTypeControl: false, // Remove map type control (satellite/terrain buttons)
-        streetViewControl: false, // Remove street view control
-        fullscreenControl: false, // Remove fullscreen control
-        zoomControl: true, // Keep zoom control
-        gestureHandling: "greedy" // Better mobile handling
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        zoomControl: true,
+        gestureHandling: "greedy"
       });
 
-      // Dohvati znamenitosti s backend API-ja
       const response = await fetch("http://localhost:4000/api/attractions");
       const attractions = await response.json();
 
@@ -197,7 +193,7 @@ export default function App() {
   }, []);
 
   return (
-    <div>
+    <div className="map-page-container"> 
       <div className="map-page-header">
         <a className="back-home-button" href="/user">BACK HOME</a>
       </div>

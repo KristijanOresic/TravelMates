@@ -1,5 +1,3 @@
-
-
 #map {
     position: relative;
     width: 100vw;
@@ -32,41 +30,33 @@
     transform: scale(1.1);
 }
 
+/* Map page container - overflow hidden SAMO za ovu stranicu */
+.map-page-container {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
-    body {
-        overflow: hidden; /* Ensure no scrolling on mobile */
+    .map-page-container {
+        overflow: hidden;
     }
     
     #map {
         height: 90vh;
         width: 100vw;
-        position: fixed; /* Fix map position */
+        position: fixed;
         top: 10vh;
         left: 0;
     }
 
     .map-page-header {
-        position: fixed; /* Fix header position */
+        position: fixed;
         top: 0;
         left: 0;
-        z-index: 1000; /* Ensure header is above map */
+        z-index: 1000;
         height: 10vh;
         width: 100vw;
     }
-}
-
-/* Additional CSS to ensure no scrolling */
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-}
-
-#root {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
 }
