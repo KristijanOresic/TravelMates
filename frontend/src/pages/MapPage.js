@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/MapPage.css";
 
 export default function App() {
@@ -6,6 +6,8 @@ export default function App() {
   const markersRef = useRef([]);
   const infoWindowRef = useRef(null);
   const circleRef = useRef(null);
+  const [favorites, setFavorites] = useState([]);
+  const [userFavorites, setUserFavorites] = useState([]);
 
   // Haversine formula — izračun udaljenosti u km
   const getDistance = (lat1, lng1, lat2, lng2) => {
@@ -21,7 +23,84 @@ export default function App() {
     return R * c;
   };
 
+  // Učitaj favoruite korisnika
+  const fetchUserFavorites = async () => {
+    try {
+      const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUserFavorites(data.map(fav => fav.id || fav.idAttraction));
+      }
+    } catch (err) {
+      console.error("Error fetching favorites:", err);
+    }
+  };
+
+  // Dodaj u favorite
+  const addFavorite = async (attractionId) => {
+    try {
+      const res = await fetch("http://localhost:4000/api/attractions/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ attraction_id: attractionId }),
+      });
+      if (res.ok) {
+        setUserFavorites([...userFavorites, attractionId]);
+        // Ažuriraj srce na mapi
+        const favBtn = document.getElementById(`fav-btn-${attractionId}`);
+        if (favBtn) {
+          favBtn.textContent = "❤️";
+        }
+      } else {
+        console.error("Failed to add favorite:", res.statusText);
+      }
+    } catch (err) {
+      console.error("Error adding favorite:", err);
+    }
+  };
+
+  // Ukloni iz favorita
+  const removeFavorite = async (attractionId) => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${attractionId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (res.ok) {
+        setUserFavorites(userFavorites.filter(id => id !== attractionId));
+        // Ažuriraj srce na mapi
+        const favBtn = document.getElementById(`fav-btn-${attractionId}`);
+        if (favBtn) {
+          favBtn.textContent = "🤍";
+        }
+      } else {
+        console.error("Failed to remove favorite:", res.statusText);
+      }
+    } catch (err) {
+      console.error("Error removing favorite:", err);
+    }
+  };
+
+  const toggleFavorite = (attractionId) => {
+    if (userFavorites.includes(attractionId)) {
+      removeFavorite(attractionId);
+    } else {
+      addFavorite(attractionId);
+    }
+  };
+
+  // Globalna funkcija za HTML onclick
   useEffect(() => {
+    window.toggleFavoriteMap = toggleFavorite;
+  }, [userFavorites]);
+
+  useEffect(() => {
+    // Učitaj favoruite na početku
+    fetchUserFavorites();
+
     const customMapStyle = [
       {
         "featureType": "poi",
@@ -99,8 +178,17 @@ export default function App() {
             title: a.name,
           });
 
+          const isFavorite = userFavorites.includes(a.id);
+          const heartIcon = isFavorite ? "❤️" : "🤍";
+
           const info = new window.google.maps.InfoWindow({
-            content: `<h3>${a.name}</h3><p>${a.description}</p>`,
+            content: `<div style="padding: 10px; max-width: 250px;">
+              <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+              <p style="margin: 0 0 12px 0; font-size: 14px;">${a.description}</p>
+              <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
+                ${heartIcon}
+              </button>
+            </div>`,
           });
 
           marker.addListener("click", () => {
@@ -161,10 +249,20 @@ export default function App() {
           a.location_lng
         );
 
+        const isFavorite = userFavorites.includes(a.id);
+        const heartIcon = isFavorite ? "❤️" : "🤍";
+
         const info = new window.google.maps.InfoWindow({
-          content: `<h3>${a.name}</h3><p>${a.description}</p><p><strong>Udaljenost: ${distance.toFixed(
+          content: `<div style="padding: 10px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+            <p style="margin: 0 0 8px 0; font-size: 14px;">${a.description}</p>
+            <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(
             2
-          )} km</strong></p>`,
+          )} km</strong></p>
+            <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
+              ${heartIcon}
+            </button>
+          </div>`,
         });
 
         marker.addListener("click", () => {
@@ -196,6 +294,9 @@ export default function App() {
     <div className="map-page-container"> 
       <div className="map-page-header">
         <a className="back-home-button" href="/user">BACK HOME</a>
+        <button className="favorites-button" onClick={() => alert(`Favoriti: ${userFavorites.length}`)}>
+          ❤️ {userFavorites.length}
+        </button>
       </div>
 
       <div

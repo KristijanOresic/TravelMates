@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../styles/AdminPage.css";
 
 export default function AdminPage() {
   const [userData, setUserData] = useState(null);
@@ -68,32 +69,34 @@ export default function AdminPage() {
   };
 
   if (loading) {
-    return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
+    return <div className="loading"><h2>Loading...</h2></div>;
   }
 
   if (!userData) {
-    return <h2 style={{ textAlign: "center" }}>Not logged in</h2>;
+    return <div className="not-logged"><h2>Not logged in</h2></div>;
   }
 
   if (userData.role !== "admin") {
-    return <h2 style={{ textAlign: "center" }}>Access denied</h2>;
+    return <div className="access-denied"><h2>Access denied</h2></div>;
   }
 
   return (
-    <div style={{ maxWidth: "800px", margin: "50px auto" }}>
+    <div className="admin-container">
       <h1>Admin panel</h1>
 
-      <p>
-        Logged in as <b>{userData.firstName}</b> ({userData.email})
-      </p>
+      <div className="admin-info">
+        <p>
+          Logged in as <b>{userData.firstName}</b> ({userData.email})
+        </p>
+      </div>
 
-      <button onClick={logout} style={{ marginBottom: "20px" }}>
+      <button onClick={logout} className="logout-btn">
         Logout
       </button>
 
       <h2>Users</h2>
 
-      <table width="100%" border="1" cellPadding="8">
+      <table className="admin-table">
         <thead>
           <tr>
             <th>Email</th>
@@ -121,7 +124,7 @@ export default function AdminPage() {
                 </select>
               </td>
               <td>
-                <button onClick={() => deleteUser(u.id)}>Delete</button>
+                <button onClick={() => deleteUser(u.id)} className="delete-btn">Delete</button>
               </td>
             </tr>
           ))}

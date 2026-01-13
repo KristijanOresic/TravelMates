@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import "../styles/UserPage.css";
 
 export default function UserPage() {
   const [userData, setUserData] = useState(null);
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +30,28 @@ export default function UserPage() {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setFavorites(data);
+        }
+      } catch (err) {
+        console.error("Error fetching favorites:", err);
+      }
+    };
+
+    if (userData) {
+      fetchFavorites();
+    }
+  }, [userData]);
+
   const handleLogout = async () => {
     try {
       const res = await fetch("http://localhost:4000/logout", {
@@ -46,21 +70,75 @@ export default function UserPage() {
     }
   };
 
+  const handleRemoveFavorite = async (favoriteId) => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${favoriteId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setFavorites(favorites.filter(fav => fav.id !== favoriteId));
+      } else {
+        alert("Greška pri brisanju favorita");
+      }
+    } catch (err) {
+      console.error("Error removing favorite:", err);
+    }
+  };
+
   if (loading) {
-    return <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Welcome {userData?.firstName}!</h1>
-      <p>Role: {userData?.role}</p>
+    <div className="user-page">
+      <div className="profile-container">
+        <div className="profile-header">
+          <h1>{userData?.firstName} {userData?.lastName}</h1>
+          <p className="role-badge">{userData?.role}</p>
+        </div>
 
-      <a href="/map" style={{ display: "block", marginTop: "20px" }}>MAP</a>
-      
-      <button onClick={handleLogout} style={{ marginTop: "20px", padding: "10px 20px" }}>
-        Logout
-      </button>
+        <div className="profile-info">
+          <div className="info-item">
+            <label>Email:</label>
+            <p>{userData?.email}</p>
+          </div>
+          <div className="info-item">
+            <label>Uloga:</label>
+            <p>{userData?.role}</p>
+          </div>
+        </div>
 
+        <a href="/map" className="map-link">Otvori mapu</a>
+        
+        <button onClick={handleLogout} className="logout-btn">
+          Logout
+        </button>
+      </div>
+
+      <div className="favorites-container">
+        <h2>Moji omiljeni lokaliteti</h2>
+        {favorites && favorites.length > 0 ? (
+          <div className="favorites-grid">
+            {favorites.map((fav) => (
+              <div key={fav.id} className="favorite-card">
+                <h3>{fav.name}</h3>
+                <p>{fav.description}</p>
+                <p className="location">{fav.location}</p>
+                <button 
+                  onClick={() => handleRemoveFavorite(fav.id)}
+                  className="remove-btn"
+                >
+                  Ukloni iz omiljenih
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="no-favorites">Nemaš omiljenih lokaliteta. Dodaj neke na mapi!</p>
+        )}
+      </div>
     </div>
   );
 }

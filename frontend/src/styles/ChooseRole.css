@@ -6,14 +6,14 @@
   display: flex;
   box-shadow: 1px 1px 20px gray;
   border-radius: 15px;
-  height: 70vh;
-  width: 80vw;
+  height: 50vh;
+  width: 60vw;
 }
 
 
 .sign-in-part{
     position: relative;
-    background-color: rgb(10, 69, 79);
+    background-color: #6B4423;
     padding: 20px;
     width: 50%;
     border-top-left-radius: 15px;
@@ -37,7 +37,7 @@
     background-color: white;
     padding: 10px;
     font-size: 15px;
-    color: rgb(10, 69, 79);
+    color: #6B4423;
     border-radius: 15px;
     transition: all 0.3s ease;
         box-shadow: 1px 1px 5px gray;
@@ -67,7 +67,7 @@
 .create-an-account{
     position: relative;
     font-size: 30px;
-    color: rgb(10, 69, 79);
+    color: #6B4423;
     font-weight: 500;
 }
 
@@ -123,7 +123,7 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid rgb(10, 69, 79);;
+  border: 2px solid #6B4423;;
   border-radius: 50%;
   outline: none;
   cursor: pointer;
@@ -131,13 +131,13 @@
 }
 
 .choose-role-radio input[type="radio"]:checked {
-  border-color: rgb(10, 69, 79);
-  background-color: rgb(10, 69, 79);;
+  border-color: #6B4423;
+  background-color: #6B4423;;
 }
 
 .sign-up-button{
     border: none;
-    background-color: rgb(10, 69, 79);
+    background-color: #6B4423;
     padding: 10px;
     font-size: 15px;
     color: white;

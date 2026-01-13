@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <img 
-        src="/travelmateLogo.png"       
+        src="/tmlogo.png"       
         alt="Logo"
         className="top-left-logo"
       />
