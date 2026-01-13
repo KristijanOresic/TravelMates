@@ -1,0 +1,89 @@
+.editor-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding-bottom: 50px;
+}
+
+.center {
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.logout-btn {
+  margin-bottom: 20px;
+}
+
+.add-form input,
+.add-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.add-form textarea {
+  min-height: 80px;
+}
+
+.coords {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.coords input {
+  flex: 1;
+  padding: 8px;
+}
+
+.attractions-list {
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+}
+
+.attraction-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.attraction-card textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.title-input {
+  width: 100%;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.coords-text {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
