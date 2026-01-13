@@ -1,131 +1,316 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/MapPage.css";
 
-export default function MapPage() {
+export default function App() {
   const mapRef = useRef(null);
+  const markersRef = useRef([]);
   const infoWindowRef = useRef(null);
+  const circleRef = useRef(null);
+  const [favorites, setFavorites] = useState([]);
   const [userFavorites, setUserFavorites] = useState([]);
 
-  // ===== FETCH FAVORITES (FROM DB) =====
-  const fetchFavorites = async () => {
+  // Haversine formula — izračun udaljenosti u km
+  const getDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // Učitaj favoruite korisnika
+  const fetchUserFavorites = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/favorites", {
+      const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
         credentials: "include",
       });
 
       if (res.ok) {
         const data = await res.json();
-        setUserFavorites(data.map(f => f.id));
+        setUserFavorites(data.map(fav => fav.id || fav.idAttraction));
       }
     } catch (err) {
-      console.error("Fetch favorites error:", err);
+      console.error("Greška pri učitavanju favorita:", err);
     }
   };
 
-  // ===== TOGGLE FAVORITE =====
-  const toggleFavorite = async (id) => {
-    const isFav = userFavorites.includes(id);
+  // Dodaj u favorite
+  const addFavorite = async (attractionId) => {
+    try {
+      const res = await fetch("http://localhost:4000/api/attractions/favorites", {
+        method: "POST",
 
-    await fetch(
-      `http://localhost:4000/api/favorites${isFav ? "/" + id : ""}`,
-      {
-        method: isFav ? "DELETE" : "POST",
+
+
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: isFav ? null : JSON.stringify({ attractionId: id }),
+        body: JSON.stringify({ attraction_id: attractionId }),
+      });
+      if (res.ok) {
+        setUserFavorites([...userFavorites, attractionId]);
+        // Ažuriraj srce na mapi
+        const favBtn = document.getElementById(`fav-btn-${attractionId}`);
+        if (favBtn) {
+          favBtn.textContent = "❤️";
+        }
+      } else {
+        console.error("Neuspjelo dodavanje u favorite:", res.statusText);
       }
-    );
-
-    // update state
-    setUserFavorites(prev =>
-      isFav ? prev.filter(f => f !== id) : [...prev, id]
-    );
-
-    // update UI in InfoWindow
-    const btn = document.getElementById(`fav-btn-${id}`);
-    if (btn) btn.textContent = isFav ? "🤍" : "❤️";
+    } catch (err) {
+      console.error("Greška pri dodavanju u favorite:", err);
+    }
   };
 
-  // expose function for InfoWindow HTML
+  // Ukloni iz favorita
+  const removeFavorite = async (attractionId) => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${attractionId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (res.ok) {
+        setUserFavorites(userFavorites.filter(id => id !== attractionId));
+        // Ažuriraj srce na mapi
+        const favBtn = document.getElementById(`fav-btn-${attractionId}`);
+        if (favBtn) {
+          favBtn.textContent = "🤍";
+        }
+      } else {
+        console.error("Neuspjelo uklanjanje iz favorita:", res.statusText);
+      }
+    } catch (err) {
+      console.error("Greška pri uklanjanju iz favorita:", err);
+    }
+  };
+
+  const toggleFavorite = (attractionId) => {
+    if (userFavorites.includes(attractionId)) {
+      removeFavorite(attractionId);
+    } else {
+      addFavorite(attractionId);
+    }
+  };
+
+  // Globalna funkcija za HTML onclick
   useEffect(() => {
     window.toggleFavoriteMap = toggleFavorite;
   }, [userFavorites]);
 
   useEffect(() => {
-    fetchFavorites();
+    // Učitaj favoruite na početku
+    fetchUserFavorites();
 
-    const loadMaps = () =>
-      new Promise(resolve => {
-        if (window.google?.maps) return resolve();
-        const s = document.createElement("script");
-        s.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`;
-        s.onload = resolve;
-        document.head.appendChild(s);
-      });
+    const customMapStyle = [
+      {
+        "featureType": "poi",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [{ "visibility": "off" }]
+      },
+      {
+        "featureType": "road",
+        "stylers": [{ "visibility": "simplified" }]
+      },
+      {
+        "featureType": "landscape",
+        "stylers": [{ "visibility": "simplified" }]
+      },
+      {
+        "elementType": "labels",
+        "stylers": [{ "visibility": "off" }]
+      }
+    ];
 
-    const initMap = async (pos) => {
-      await loadMaps();
-
-      const map = new window.google.maps.Map(mapRef.current, {
-        zoom: 10,
-        center: pos,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-      });
-
-      const res = await fetch("http://localhost:4000/api/attractions");
-      const attractions = await res.json();
-
-      attractions.forEach(a => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: a.location_lat, lng: a.location_lng },
-          map,
-        });
-
-        const heart = userFavorites.includes(a.id) ? "❤️" : "🤍";
-
-        const info = new window.google.maps.InfoWindow({
-          content: `
-            <div style="padding:10px">
-              <h3>${a.name}</h3>
-              <p>${a.description}</p>
-              <button
-                id="fav-btn-${a.id}"
-                onclick="window.toggleFavoriteMap(${a.id})"
-                style="font-size:26px;background:none;border:none;cursor:pointer"
-              >${heart}</button>
-            </div>
-          `,
-        });
-
-        marker.addListener("click", () => {
-          infoWindowRef.current?.close();
-          infoWindowRef.current = info;
-          info.open(map, marker);
-        });
+    const loadGoogleMaps = () => {
+      return new Promise((resolve) => {
+        if (window.google && window.google.maps) {
+          resolve();
+          return;
+        }
+        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+        script.async = true;
+        script.defer = true;
+        script.onload = async () => {
+          await new Promise((r) => setTimeout(r, 300));
+          resolve();
+        };
+        document.head.appendChild(script);
       });
     };
 
+    const initMap = async (position, hasLocation = true) => {
+      await loadGoogleMaps();
+
+      if (!mapRef.current) {
+        console.error("❌ mapRef još nije dostupan!");
+        return;
+      }
+      if (!window.google || !window.google.maps) {
+        console.error("❌ Google Maps nije dostupan!");
+        return;
+      }
+
+      const map = new window.google.maps.Map(mapRef.current, {
+        zoom: hasLocation ? 10 : 7,
+        center: position,
+        styles: customMapStyle,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        zoomControl: true,
+        gestureHandling: "greedy"
+      });
+
+      const response = await fetch("http://localhost:4000/api/attractions");
+      const attractions = await response.json();
+
+      if (!hasLocation) {
+        // Korisnik nije dozvolio lokaciju → prikaži SVE znamenitosti
+        attractions.forEach((a) => {
+          const marker = new window.google.maps.Marker({
+            position: { lat: a.location_lat, lng: a.location_lng },
+            map,
+            title: a.name,
+          });
+
+          const isFavorite = userFavorites.includes(a.id);
+          const heartIcon = isFavorite ? "❤️" : "🤍";
+
+          const info = new window.google.maps.InfoWindow({
+            content: `<div style="padding: 10px; max-width: 250px;">
+              <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+              <p style="margin: 0 0 12px 0; font-size: 14px;">${a.description}</p>
+              <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
+                ${heartIcon}
+              </button>
+            </div>`,
+          });
+
+          marker.addListener("click", () => {
+            if (infoWindowRef.current) infoWindowRef.current.close();
+            infoWindowRef.current = info;
+            info.open(map, marker);
+          });
+
+          markersRef.current.push(marker);
+        });
+
+        return;
+      }
+
+      // Ako korisnik dozvoli lokaciju → prikaži njegov marker i krug
+      new window.google.maps.Marker({
+        position,
+        map,
+        title: "Tvoja lokacija",
+        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      });
+
+      // Krug 40km
+      circleRef.current = new window.google.maps.Circle({
+        center: position,
+        radius: 40000,
+        map,
+        fillColor: "#4285F4",
+        fillOpacity: 0.1,
+        strokeColor: "#4285F4",
+        strokeOpacity: 0.5,
+        strokeWeight: 2,
+      });
+
+      // Filtriraj znamenitosti unutar 40 km
+      const nearbyAttractions = attractions.filter((a) => {
+        const distance = getDistance(
+          position.lat,
+          position.lng,
+          a.location_lat,
+          a.location_lng
+        );
+        return distance <= 40;
+      });
+
+      // Dodaj markere za te znamenitosti
+      nearbyAttractions.forEach((a) => {
+        const marker = new window.google.maps.Marker({
+          position: { lat: a.location_lat, lng: a.location_lng },
+          map,
+          title: a.name,
+        });
+
+        const distance = getDistance(
+          position.lat,
+          position.lng,
+          a.location_lat,
+          a.location_lng
+        );
+
+        const isFavorite = userFavorites.includes(a.id);
+        const heartIcon = isFavorite ? "❤️" : "🤍";
+
+        const info = new window.google.maps.InfoWindow({
+          content: `<div style="padding: 10px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+            <p style="margin: 0 0 8px 0; font-size: 14px;">${a.description}</p>
+            <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(
+            2
+          )} km</strong></p>
+            <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
+              ${heartIcon}
+            </button>
+          </div>`,
+
+        });
+
+        marker.addListener("click", () => {
+          if (infoWindowRef.current) infoWindowRef.current.close();
+          infoWindowRef.current = info;
+          info.open(map, marker);
+        });
+
+        markersRef.current.push(marker);
+      });
+    };
+
+    // Dohvati geolokaciju korisnika odmah po učitavanju
     navigator.geolocation.getCurrentPosition(
-      pos => initMap({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => initMap({ lat: 45.1, lng: 15.2 })
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const position = { lat: latitude, lng: longitude };
+        initMap(position, true);
+      },
+      () => {
+        // Ako korisnik odbije lokaciju → centar Hrvatske i sve znamenitosti
+        const croatiaCenter = { lat: 45.1, lng: 15.2 };
+        initMap(croatiaCenter, false);
+      }
     );
   }, []);
 
   return (
-    <div className="map-page-container">
+    <div className="map-page-container"> 
       <div className="map-page-header">
-        <a className="back-home-button" href="/user">
-          POVRATAK NA POČETNU
-        </a>
+        <a className="back-home-button" href="/user">POVRATAK NA POČETNU STRANICU</a>
+        <button className="favorites-button" onClick={() => alert(`Favoriti: ${userFavorites.length}`)}>
+          ❤️ {userFavorites.length}
+        </button>
 
-        <div style={{ marginRight: "30px", fontWeight: "600" }}>
-          ❤️ Favoriti ({userFavorites.length})
-        </div>
+
+
       </div>
 
-      <div id="map" ref={mapRef}></div>
+      <div
+        id="map"
+        ref={mapRef}
+      ></div>
     </div>
   );
 }

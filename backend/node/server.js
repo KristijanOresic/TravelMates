@@ -10,7 +10,7 @@ import dotenv from "dotenv";
 dotenv.config(); 
 import attractionsRouter from "./routes/attractions.js";
 import adminRouter from "./routes/admin.js";
-import favoritesRouter from "./routes/favorites.js";
+
 
 const app = express();
 
@@ -43,7 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/attractions", attractionsRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/favorites", favoritesRouter);
+
 
 passport.serializeUser((user, done) => done(null, user.id));
 
@@ -155,7 +155,7 @@ app.get("/me", (req, res) => {
 
   try {
     const user = jwt.verify(token, SESSION_SECRET);
-    
+
     pool.query("SELECT id, email, role, first_name, last_name FROM users WHERE id=$1", [user.id])
       .then(result => {
         if (result.rows.length > 0) {
