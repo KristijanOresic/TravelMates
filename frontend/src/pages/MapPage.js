@@ -8,8 +8,69 @@ export default function App() {
   const circleRef = useRef(null);
   const [favorites, setFavorites] = useState([]);
   const [userFavorites, setUserFavorites] = useState([]);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const currentUtteranceRef = useRef(null);
 
-  // Haversine formula — izračun udaljenosti u km
+  // TTS funkcija koristeći Web Speech API
+  const speakText = (text, attractionId) => {
+    // Provjeri da li browser podržava Web Speech API
+    if (!('speechSynthesis' in window)) {
+      alert('Vaš preglednik ne podržava text-to-speech funkcionalnost');
+      return;
+    }
+
+    const speakerBtn = document.getElementById(`speaker-btn-${attractionId}`);
+
+    // Ako se već nešto čita, zaustavi
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      if (speakerBtn) {
+        speakerBtn.textContent = "🔊";
+      }
+      setIsSpeaking(false);
+      return;
+    }
+
+    // Kreiraj novi SpeechSynthesisUtterance
+    const utterance = new SpeechSynthesisUtterance(text);
+    currentUtteranceRef.current = utterance;
+
+    // Postavi hrvatski jezik
+    utterance.lang = 'hr-HR';
+    utterance.rate = 1.0; // Brzina govora (0.1 - 10)
+    utterance.pitch = 1.0; // Ton glasa (0 - 2)
+    utterance.volume = 1.0; // Glasnoća (0 - 1)
+
+    // Event listeneri
+    utterance.onstart = () => {
+      if (speakerBtn) {
+        speakerBtn.textContent = "⏸️";
+      }
+      setIsSpeaking(true);
+    };
+
+    utterance.onend = () => {
+      if (speakerBtn) {
+        speakerBtn.textContent = "🔊";
+      }
+      setIsSpeaking(false);
+      currentUtteranceRef.current = null;
+    };
+
+    utterance.onerror = (event) => {
+      console.error('TTS greška:', event);
+      if (speakerBtn) {
+        speakerBtn.textContent = "🔊";
+      }
+      setIsSpeaking(false);
+      currentUtteranceRef.current = null;
+    };
+
+    // Pokreni TTS
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Haversine formula – izračun udaljenosti u km
   const getDistance = (lat1, lng1, lat2, lng2) => {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -44,9 +105,6 @@ export default function App() {
     try {
       const res = await fetch("http://localhost:4000/api/attractions/favorites", {
         method: "POST",
-
-
-
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ attraction_id: attractionId }),
@@ -96,9 +154,10 @@ export default function App() {
     }
   };
 
-  // Globalna funkcija za HTML onclick
+  // Globalne funkcije za HTML onclick
   useEffect(() => {
     window.toggleFavoriteMap = toggleFavorite;
+    window.speakDescriptionMap = speakText;
   }, [userFavorites]);
 
   useEffect(() => {
@@ -189,9 +248,14 @@ export default function App() {
             content: `<div style="padding: 10px; max-width: 250px;">
               <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
               <p style="margin: 0 0 12px 0; font-size: 14px;">${a.description}</p>
-              <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
-                ${heartIcon}
-              </button>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="speaker-btn-${a.id}" onclick="window.speakDescriptionMap('${a.description.replace(/'/g, "\\'")}', ${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
+                  🔊
+                </button>
+                <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">
+                  ${heartIcon}
+                </button>
+              </div>
             </div>`,
           });
 
@@ -260,14 +324,16 @@ export default function App() {
           content: `<div style="padding: 10px; max-width: 250px;">
             <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
             <p style="margin: 0 0 8px 0; font-size: 14px;">${a.description}</p>
-            <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(
-            2
-          )} km</strong></p>
-            <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;">
-              ${heartIcon}
-            </button>
+            <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(2)} km</strong></p>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button id="speaker-btn-${a.id}" onclick="window.speakDescriptionMap('${a.description.replace(/'/g, "\\'")}', ${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
+                🔊
+              </button>
+              <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">
+                ${heartIcon}
+              </button>
+            </div>
           </div>`,
-
         });
 
         marker.addListener("click", () => {
@@ -293,6 +359,13 @@ export default function App() {
         initMap(croatiaCenter, false);
       }
     );
+
+    // Cleanup funkcija
+    return () => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   return (
@@ -302,9 +375,6 @@ export default function App() {
         <button className="favorites-button" onClick={() => alert(`Favoriti: ${userFavorites.length}`)}>
           ❤️ {userFavorites.length}
         </button>
-
-
-
       </div>
 
       <div
