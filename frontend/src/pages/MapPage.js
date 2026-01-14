@@ -246,7 +246,8 @@ export default function App() {
 
           const info = new window.google.maps.InfoWindow({
             content: `<div style="padding: 10px; max-width: 250px;">
-              <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+              <img src="${a.image || ""}" alt="${a.name}" style="width: 100%; max-width: 250px; height: auto; border-radius: 8px; margin-bottom: 8px;"/>              <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+              <p style="margin: 0 0 8px 0; font-size: 14px;">Radno vrijeme: ${a.opening_hours || "Nije dostupno"}</p>
               <p style="margin: 0 0 12px 0; font-size: 14px;">${a.description}</p>
               <div style="display: flex; gap: 10px; align-items: center;">
                 <button id="speaker-btn-${a.id}" onclick="window.speakDescriptionMap('${a.description.replace(/'/g, "\\'")}', ${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
@@ -322,7 +323,9 @@ export default function App() {
 
         const info = new window.google.maps.InfoWindow({
           content: `<div style="padding: 10px; max-width: 250px;">
+            <img src="${a.image || ""}" alt="${a.name}" style="width: 100%; max-width: 250px; height: auto; border-radius: 8px; margin-bottom: 8px;"/>
             <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
+            <p style="margin: 0 0 8px 0; font-size: 14px;">Radno vrijeme: ${a.opening_hours || "Nije dostupno"}</p>
             <p style="margin: 0 0 8px 0; font-size: 14px;">${a.description}</p>
             <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(2)} km</strong></p>
             <div style="display: flex; gap: 10px; align-items: center;">

@@ -11,6 +11,8 @@ export default function EditorPage() {
   const [description, setDescription] = useState("");
   const [locationLat, setLocationLat] = useState("");
   const [locationLng, setLocationLng] = useState("");
+  const [openingHours, setOpeningHours] = useState("");
+  const [image, setImage] = useState("");
 
   // Dohvat trenutno prijavljenog korisnika
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function EditorPage() {
   const addAttraction = async e => {
     e.preventDefault();
 
-    if (!name || !description || !locationLat || !locationLng) {
+    if (!name || !description || !locationLat || !locationLng || !openingHours || !image) {
       setError("Sva polja su obavezna!");
       return;
     }
@@ -81,6 +83,8 @@ export default function EditorPage() {
           description,
           location_lat: lat,
           location_lng: lng,
+          opening_hours: openingHours,
+          image,
         }),
       });
 
@@ -96,13 +100,15 @@ export default function EditorPage() {
       setDescription("");
       setLocationLat("");
       setLocationLng("");
+      setOpeningHours("");
+      setImage("");
       setError("");
     } catch (err) {
       setError("Neuspjelo dodavanje znamenitosti!");
     }
   };
 
-  const updateAttraction = async (id, name, description, lat, lng) => {
+  const updateAttraction = async (id, name, description, lat, lng, openingHours, image) => {
     try {
       await fetch(`http://localhost:4000/api/attractions/${id}`, {
         method: "PUT",
@@ -113,6 +119,8 @@ export default function EditorPage() {
           description,
           location_lat: parseFloat(lat),
           location_lng: parseFloat(lng),
+          opening_hours: openingHours,
+          image,
         }),
       });
     } catch (err) {
@@ -172,6 +180,18 @@ export default function EditorPage() {
           onChange={e => setDescription(e.target.value)}
         />
 
+        <input
+          placeholder="Radno vrijeme"
+          value={openingHours}
+          onChange={e => setOpeningHours(e.target.value)}
+        />
+
+        <input
+          placeholder="URL slike"
+          value={image}
+          onChange={e => setImage(e.target.value)}
+        />
+
         <div className="coords">
           <input
             type="number"
@@ -205,7 +225,7 @@ export default function EditorPage() {
               <input
                 defaultValue={a.name}
                 onBlur={e =>
-                  updateAttraction(a.id, e.target.value, a.description, a.location_lat, a.location_lng)
+                  updateAttraction(a.id, e.target.value, a.description, a.location_lat, a.location_lng, a.opening_hours, a.image)
                 }
                 className="title-input"
               />
@@ -213,8 +233,24 @@ export default function EditorPage() {
               <textarea
                 defaultValue={a.description}
                 onBlur={e =>
-                  updateAttraction(a.id, a.name, e.target.value, a.location_lat, a.location_lng)
+                  updateAttraction(a.id, a.name, e.target.value, a.location_lat, a.location_lng, a.opening_hours, a.image)
                 }
+              />
+
+              <input
+                defaultValue={a.opening_hours || ""}
+                onBlur={e =>
+                  updateAttraction(a.id, a.name, a.description, a.location_lat, a.location_lng, e.target.value, a.image)
+                }
+                className="extra-input"
+              />
+
+              <input
+                defaultValue={a.image || ""}
+                onBlur={e =>
+                  updateAttraction(a.id, a.name, a.description, a.location_lat, a.location_lng, a.opening_hours, e.target.value)
+                }
+                className="extra-input"
               />
 
               <div className="coords">
