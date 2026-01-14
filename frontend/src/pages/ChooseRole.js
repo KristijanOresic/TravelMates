@@ -14,6 +14,22 @@ export default function ChooseRole() {
   const SECRET_PASSWORD = "travelmate2025";
 
   useEffect(() => {
+    // Ova funkcija se okida kada korisnik klikne Back u pregledniku
+    const handleBackButton = (event) => {
+      event.preventDefault();
+      window.location.href = "/"; // Prisilni povratak na početnu
+    };
+
+    // Dodajemo "slušalicu" na promjenu povijesti preglednika
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      // Čistimo slušalicu kada odemo s ove stranice
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isUnlocked) return;
 
     const checkLoggedIn = async () => {
@@ -105,7 +121,7 @@ export default function ChooseRole() {
   };
 
   return (
-    <div className="choose-role-main">
+    <div className={`choose-role-main ${isUnlocked ? "unlocked" : ""}`}>
       <div className="sign-in-part">
         <div className="welcome-back">DOBRO DOŠLI NATRAG!</div>
         <button className="login-button" onClick={handleLogin}>

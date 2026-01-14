@@ -1,3 +1,47 @@
+.not-logged-in-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f1ee;
+  font-family: sans-serif;
+}
+
+.not-logged-in-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 400px;
+  border-top: 6px solid #6B4423;
+}
+
+.not-logged-in-card h1 {
+  color: #6B4423;
+  margin-bottom: 10px;
+}
+
+.not-logged-in-card p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.not-logged-in-link {
+  display: inline-block;
+  background-color: #6B4423;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.not-logged-in-link:hover {
+  background-color: #55361c;
+}
+
 .user-page {
   display: grid;
   grid-template-columns: 1fr 1fr;

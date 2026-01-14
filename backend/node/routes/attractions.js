@@ -94,62 +94,67 @@ router.delete("/:id", requireAuth, requireEditor, async (req, res) => {
   }
 });
 
-// ===== FAVORITES ROUTES =====
-
-// Dohvati sve favoruite korisnika
-router.get("/favorites/list", requireAuth, async (req, res) => {
-  try {
-    const userId = req.user.id || req.user.idUser;
-    const result = await pool.query(
-      `SELECT a.* FROM attractions a
-       INNER JOIN userFavorites uf ON a.id = uf.idAttraction
-       WHERE uf.idUser = $1`,
-      [userId]
-    );
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Error fetching favorites:", err);
-    res.status(500).json({ error: "Database error" });
-  }
-});
-
 // Dodaj u favorite
 router.post("/favorites", requireAuth, async (req, res) => {
+  const { attraction_id } = req.body;
+  const userId = req.user.id;
+
   try {
-    const userId = req.user.id || req.user.idUser;
-    const { attraction_id } = req.body;
-
-    if (!attraction_id) {
-      return res.status(400).json({ error: "attraction_id is required" });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO userFavorites (idUser, idAttraction)
-       VALUES ($1, $2) RETURNING *`,
+    // Provjeri postoji li već
+    const existing = await pool.query(
+      "SELECT * FROM user_favorites WHERE user_id=$1 AND attraction_id=$2",
       [userId, attraction_id]
     );
 
-    res.json(result.rows[0]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "Already in favorites" });
+    }
+
+    await pool.query(
+      "INSERT INTO user_favorites (user_id, attraction_id) VALUES ($1, $2)",
+      [userId, attraction_id]
+    );
+
+    res.json({ message: "Added to favorites" });
   } catch (err) {
-    console.error("Error adding favorite:", err);
+    console.error("Add favorite error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
 
 // Ukloni iz favorita
-router.delete("/favorites/:attraction_id", requireAuth, async (req, res) => {
-  try {
-    const userId = req.user.id || req.user.idUser;
-    const { attraction_id } = req.params;
+router.delete("/favorites/:attractionId", requireAuth, async (req, res) => {
+  const userId = req.user.id;
+  const { attractionId } = req.params;
 
+  try {
     await pool.query(
-      `DELETE FROM userFavorites WHERE idUser = $1 AND idAttraction = $2`,
-      [userId, attraction_id]
+      "DELETE FROM user_favorites WHERE user_id=$1 AND attraction_id=$2",
+      [userId, attractionId]
     );
 
     res.json({ message: "Removed from favorites" });
   } catch (err) {
-    console.error("Error removing favorite:", err);
+    console.error("Remove favorite error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Dohvati favorite korisnika
+router.get("/favorites/list", requireAuth, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT a.* FROM attractions a 
+       INNER JOIN user_favorites f ON a.id = f.attraction_id 
+       WHERE f.user_id = $1`,
+      [userId]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Get favorites error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });

@@ -93,10 +93,16 @@ export default function UserPage() {
 
   if (!userData) {
     return (
-      <div className="not-logged-in">
-        <h1>Niste prijavljeni!</h1>
-        <p>Molimo prijavite se kako biste pristupili ovoj stranici.</p>
-        <a href="/">Prijava</a>
+      <div className="not-logged-in-container">
+        <div className="not-logged-in-card">
+          <h1>Niste prijavljeni!</h1>
+          <p>
+            Molimo prijavite se kako biste pristupili ovoj stranici.
+          </p>
+          <a href="/" className="not-logged-in-link">
+            Prijava
+          </a>
+        </div>
       </div>
     );
   }
