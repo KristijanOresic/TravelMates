@@ -6,11 +6,12 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
     idUser SERIAL PRIMARY KEY,
-    firstName VARCHAR(20),
-    lastName VARCHAR(20),
+    first_name VARCHAR(20),
+    last_name VARCHAR(20),
     email VARCHAR(30) UNIQUE NOT NULL,
-    role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'admin'))
+    role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'admin', 'editor'))
 );
+
 
 CREATE TABLE attractions (
     idAttraction SERIAL PRIMARY KEY,
