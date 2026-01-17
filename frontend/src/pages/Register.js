@@ -59,42 +59,45 @@ export default function Register() {
   };
 
   return (
-    <div className="choose-role-main">
-      <div className="sign-in-part">
-        <div className="welcome-back">DOBRO DOŠLI NATRAG!</div>
-        <button className="login-button" onClick={handleLogin}>
-          PRIJAVA
-        </button>
-      </div>
-
-      <div className="sign-up-part">
-        <div className="create-an-account">IZRADITE RAČUN!</div>
-
-        <div className="choose-role-inputs">
-          <input
-            type="text"
-            placeholder="Ime"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Prezime"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <>
+      <div className="choose-role-header"></div>
+      <div className="choose-role-main">
+        <div className="sign-in-part">
+          <div className="welcome-back">DOBRO DOŠLI NATRAG!</div>
+          <button className="login-button" onClick={handleLogin}>
+            PRIJAVA
+          </button>
         </div>
 
-        <button className="sign-up-button" onClick={handleRegister}>
-          REGISTRACIJA
-        </button>
+        <div className="sign-up-part">
+          <div className="create-an-account">IZRADITE RAČUN!</div>
+
+          <div className="choose-role-inputs">
+            <input
+              type="text"
+              placeholder="Ime"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Prezime"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <button className="sign-up-button" onClick={handleRegister}>
+            REGISTRACIJA
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

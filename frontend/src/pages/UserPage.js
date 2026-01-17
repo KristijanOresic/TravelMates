@@ -108,26 +108,30 @@ export default function UserPage() {
   }
 
   return (
-    <div className="user-page">
-      <div className="profile-container">
-        <div className="profile-header">
-          <h1>{userData?.firstName} {userData?.lastName}</h1>
-          <p className="role-badge">{userData?.role}</p>
-        </div>
-
-        <div className="profile-info">
-          <div className="info-item">
-            <label>Email:</label>
-            <p>{userData?.email}</p>
+    <>
+      <div className="user-page-header">
+        <h2>Moj profil</h2>
+      </div>
+      <div className="user-page">
+        <div className="profile-container">
+          <div className="profile-header">
+            <h1>{userData?.firstName} {userData?.lastName}</h1>
+            <p className="role-badge">{userData?.role}</p>
           </div>
 
-          <div className="info-item">
-            <label>Uloga:</label>
-            <p>{userData?.role}</p>
-          </div>
-        </div>
+          <div className="profile-info">
+            <div className="info-item">
+              <label>Email:</label>
+              <p>{userData?.email}</p>
+            </div>
 
-        <a href="/map" className="map-link">Otvori kartu</a>
+            <div className="info-item">
+              <label>Uloga:</label>
+              <p>{userData?.role}</p>
+            </div>
+          </div>
+
+          <a href="/map" className="map-link">Otvori kartu</a>
         
         <button onClick={handleLogout} className="logout-btn">
           Odjava
@@ -140,6 +144,16 @@ export default function UserPage() {
           <div className="favorites-grid">
             {favorites.map((fav) => (
               <div key={fav.id} className="favorite-card">
+                {(() => {
+                  const imgSrc = fav.image || fav.image_url || fav.photo;
+                  return imgSrc ? (
+                    <img
+                      src={imgSrc}
+                      alt={fav.name}
+                      className="favorite-image"
+                    />
+                  ) : null;
+                })()}
                 <h3>{fav.name}</h3>
                 <p>{fav.description}</p>
                 <p className="location">{fav.location}</p>
@@ -157,5 +171,6 @@ export default function UserPage() {
         )}
       </div>
     </div>
+    </>
   );
 }

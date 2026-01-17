@@ -26,6 +26,17 @@
   }
 }
 
+/* Mobile responsiveness for logo */
+@media (max-width: 768px) {
+  .top-left-logo {
+    width: 140px;
+    height: 140px;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+  }
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

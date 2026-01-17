@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f1ee;
+  background-color: #fbf2e6;
   font-family: sans-serif;
 }
 
@@ -42,6 +42,27 @@
   background-color: #55361c;
 }
 
+.user-page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 150px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.user-page-header h2 {
+  color: #6B4423;
+  font-size: 32px;
+  margin: 0;
+  font-weight: 600;
+}
+
 .user-page {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -51,9 +72,9 @@
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 180px;
+  margin-top: 200px;
   background: #fbf2e6;
-  min-height: calc(100vh - 180px);
+  min-height: calc(100vh - 200px);
 }
 
 .profile-container {
@@ -180,6 +201,14 @@
   transform: translateY(-2px);
 }
 
+.favorite-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
 .favorite-card h3 {
   margin: 0 0 10px 0;
   color: #333;
@@ -231,11 +260,19 @@
 }
 
 @media (max-width: 768px) {
+  .user-page-header {
+    height: 110px;
+  }
+
+  .user-page-header h2 {
+    font-size: 26px;
+  }
+
   .user-page {
     grid-template-columns: 1fr;
     padding: 20px;
     padding-top: 40px;
-    margin-top: 180px;
+    margin-top: 140px;
   }
 
   .profile-header h1 {

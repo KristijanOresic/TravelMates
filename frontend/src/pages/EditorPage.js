@@ -152,23 +152,31 @@ export default function EditorPage() {
     return <h2 className="center">Pristup odbijen</h2>;
 
   return (
-    <div className="editor-container">
-      <h1>Uređivačka ploča</h1>
+    <>
+      <div className="editor-header">
+        <h2>Uređivačka ploča</h2>
+      </div>
+      <div className="editor-container">
+        <div className="editor-info-section">
+          <h1>Urednik</h1>
 
-      <p>
-        Prijavljeni kao <b>{userData.firstName}</b> ({userData.role})
-      </p>
+          <div className="editor-info">
+            <p>
+              Prijavljeni kao <b>{userData.firstName}</b> ({userData.email})
+            </p>
+          </div>
 
-      {error && <p className="error">{error}</p>}
+          {error && <p className="error">{error}</p>}
 
-      <button className="logout-btn" onClick={logout}>
-        Odjava
-      </button>
+          <button className="logout-btn" onClick={logout}>
+            Odjava
+          </button>
+        </div>
 
-      <h2>Dodajte znamenitost</h2>
-
-      <form onSubmit={addAttraction} className="add-form">
-        <input
+        <div className="attractions-wrapper">
+          <form onSubmit={addAttraction} className="add-form">
+          <h2>Dodajte znamenitost</h2>
+          <input
           placeholder="Naziv"
           value={name}
           onChange={e => setName(e.target.value)}
@@ -212,11 +220,9 @@ export default function EditorPage() {
         <button>Dodaj</button>
       </form>
 
-      <hr />
-
-      <h2>Znamenitosti ({attractions.length})</h2>
-
-      <div className="attractions-list">
+      <div className="attractions-section">
+        <h2>Znamenitosti ({attractions.length})</h2>
+        <div className="attractions-list">
         {attractions.length === 0 ? (
           <p className="empty">Nema dodanih znamenitosti</p>
         ) : (
@@ -285,7 +291,10 @@ export default function EditorPage() {
             </div>
           ))
         )}
+        </div>
+      </div>
       </div>
     </div>
+    </>
   );
 }
