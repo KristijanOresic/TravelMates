@@ -122,7 +122,7 @@ export default function App() {
         ]);
         if (favRes.ok) {
           const favs = await favRes.json();
-          setUserFavorites(favs.map(f => f.id || f.idAttraction));
+          setUserFavorites(favs.map(f => f.idAttraction));
         }
         if (attRes.ok) {
           const atts = await attRes.json();
@@ -189,36 +189,36 @@ export default function App() {
       }
 
       const filteredAttractions = hasLocationPermission
-        ? attractions.filter(a => getDistance(userPos.lat, userPos.lng, a.location_lat, a.location_lng) <= 40)
+        ? attractions.filter(a => getDistance(userPos.lat, userPos.lng, a.locationLat, a.locationLng) <= 40)
         : attractions;
 
       filteredAttractions.forEach((a) => {
         const marker = new window.google.maps.Marker({
-          position: { lat: a.location_lat, lng: a.location_lng },
+          position: { lat: a.locationLat, lng: a.locationLng },
           map,
-          title: a.name,
+          title: a.nameAttraction,
         });
 
-        const isFavorite = userFavorites.includes(a.id);
+        const isFavorite = userFavorites.includes(a.idAttraction);
         const heartIcon = isFavorite ? "❤️" : "🤍";
-        const distance = getDistance(userPos.lat, userPos.lng, a.location_lat, a.location_lng);
+        const distance = getDistance(userPos.lat, userPos.lng, a.locationLat, a.locationLng);
 
         const info = new window.google.maps.InfoWindow({
           content: `
             <div style="padding: 10px; max-width: 250px;">
-              <img src="${a.image || ""}" alt="${a.name}" style="width: 100%; max-width: 250px; height: auto; border-radius: 8px; margin-bottom: 8px;"/>
-              <h3 style="margin: 0 0 8px 0;">${a.name}</h3>
-              <p style="margin: 0 0 8px 0; font-size: 14px;">Radno vrijeme: ${a.opening_hours || "Nije dostupno"}</p>
-              <p style="margin: 0 0 12px 0; font-size: 14px;">${a.description}</p>
+              <img src="${a.imageUrl || ""}" alt="${a.nameAttraction}" style="width: 100%; max-width: 250px; height: auto; border-radius: 8px; margin-bottom: 8px;"/>
+              <h3 style="margin: 0 0 8px 0;">${a.nameAttraction}</h3>
+              <p style="margin: 0 0 8px 0; font-size: 14px;">Radno vrijeme: ${a.workingHours || "Nije dostupno"}</p>
+              <p style="margin: 0 0 12px 0; font-size: 14px;">${a.descriptionAttraction}</p>
               ${hasLocationPermission ? `
                 <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;">
                   <strong>Udaljenost: ${distance.toFixed(2)} km</strong>
                 </p>` : ""}
               <div style="display: flex; gap: 10px; align-items: center;">
-                <button id="speaker-btn-${a.id}" onclick="window.speakDescriptionMap('${a.description.replace(/'/g, "\\'")}', ${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
+                <button id="speaker-btn-${a.idAttraction}" onclick="window.speakDescriptionMap('${a.descriptionAttraction.replace(/'/g, "\\'")}', ${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
                   🔊
                 </button>
-                <button id="fav-btn-${a.id}" onclick="window.toggleFavoriteMap(${a.id})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">
+                <button id="fav-btn-${a.idAttraction}" onclick="window.toggleFavoriteMap(${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">
                   ${heartIcon}
                 </button>
               </div>

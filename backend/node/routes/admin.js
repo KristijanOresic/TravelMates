@@ -17,7 +17,7 @@ const pool = new pg.Pool({
 // Dohvat svih korisnika
 router.get("/users", requireAuth, requireAdmin, async (req, res) => {
   const result = await pool.query(
-    "SELECT id, email, role, first_name, last_name FROM users"
+    'SELECT "idUser", email, role, "firstName", "lastName" FROM users'
   );
   res.json(result.rows);
 });
@@ -28,7 +28,7 @@ router.put("/users/:id/role", requireAuth, requireAdmin, async (req, res) => {
   const { id } = req.params;
 
   await pool.query(
-    "UPDATE users SET role=$1 WHERE id=$2",
+    'UPDATE users SET role=$1 WHERE "idUser"=$2',
     [role, id]
   );
 
@@ -37,7 +37,7 @@ router.put("/users/:id/role", requireAuth, requireAdmin, async (req, res) => {
 
 // Brisanje korisnika
 router.delete("/users/:id", requireAuth, requireAdmin, async (req, res) => {
-  await pool.query("DELETE FROM users WHERE id=$1", [req.params.id]);
+  await pool.query('DELETE FROM users WHERE "idUser"=$1', [req.params.id]);
   res.json({ message: "User deleted" });
 });
 

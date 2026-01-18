@@ -25,7 +25,7 @@ export default function FavoritesPage() {
       method: "DELETE",
       credentials: "include",
     });
-    setFavorites(favorites.filter(f => f.id !== id));
+    setFavorites(favorites.filter(f => f.idAttraction !== id));
   };
 
   if (loading) return <h2 className="loading">Loading...</h2>;
@@ -39,21 +39,21 @@ export default function FavoritesPage() {
       ) : (
         <div className="favorites-grid">
           {favorites.map(fav => (
-            <div key={fav.id} className="favorite-card">
-              {fav.image && (
+            <div key={fav.idAttraction} className="favorite-card">
+              {fav.imageUrl && (
                 <img 
-                  src={fav.image} 
-                  alt={fav.name} 
+                  src={fav.imageUrl} 
+                  alt={fav.nameAttraction} 
                   className="favorite-image"
                 />
               )}
-              <h3>{fav.name}</h3>
-              <p className="favorite-description">{fav.description}</p>
+              <h3>{fav.nameAttraction}</h3>
+              <p className="favorite-description">{fav.descriptionAttraction}</p>
               <p className="favorite-hours">
-                <strong>Radno vrijeme:</strong> {fav.opening_hours || "Nije dostupno"}
+                <strong>Radno vrijeme:</strong> {fav.workingHours || "Nije dostupno"}
               </p>
               <button 
-                onClick={() => removeFavorite(fav.id)}
+                onClick={() => removeFavorite(fav.idAttraction)}
                 className="remove-btn"
               >
                 Ukloni iz favorita

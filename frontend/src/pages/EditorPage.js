@@ -136,7 +136,7 @@ export default function EditorPage() {
       credentials: "include",
     });
 
-    setAttractions(attractions.filter(a => a.id !== id));
+    setAttractions(attractions.filter(a => a.idAttraction !== id));
   };
 
   const logout = async () => {
@@ -221,34 +221,36 @@ export default function EditorPage() {
           <p className="empty">Nema dodanih znamenitosti</p>
         ) : (
           attractions.map(a => (
-            <div key={a.id} className="attraction-card">
+            <div key={a.idAttraction} className="attraction-card">
               <input
-                defaultValue={a.name}
+                defaultValue={a.nameAttraction}
                 onBlur={e =>
-                  updateAttraction(a.id, e.target.value, a.description, a.location_lat, a.location_lng, a.opening_hours, a.image)
+                  updateAttraction(a.idAttraction, e.target.value, a.descriptionAttraction, a.locationLat, a.locationLng, a.workingHours, a.imageUrl)
                 }
                 className="title-input"
               />
 
-              <textarea
-                defaultValue={a.description}
+              <textarea 
+                rows={4}
+                style={{ resize: 'vertical', width: '98%'}}
+                defaultValue={a.descriptionAttraction}
                 onBlur={e =>
-                  updateAttraction(a.id, a.name, e.target.value, a.location_lat, a.location_lng, a.opening_hours, a.image)
+                  updateAttraction(a.idAttraction, a.nameAttraction, e.target.value, a.locationLat, a.locationLng, a.workingHours, a.imageUrl)
                 }
               />
 
               <input
-                defaultValue={a.opening_hours || ""}
+                defaultValue={a.workingHours || ""}
                 onBlur={e =>
-                  updateAttraction(a.id, a.name, a.description, a.location_lat, a.location_lng, e.target.value, a.image)
+                  updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, a.locationLng, e.target.value, a.imageUrl)
                 }
                 className="extra-input"
               />
 
               <input
-                defaultValue={a.image || ""}
+                defaultValue={a.imageUrl || ""}
                 onBlur={e =>
-                  updateAttraction(a.id, a.name, a.description, a.location_lat, a.location_lng, a.opening_hours, e.target.value)
+                  updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, a.locationLng, a.workingHours, e.target.value)
                 }
                 className="extra-input"
               />
@@ -257,28 +259,28 @@ export default function EditorPage() {
                 <input
                   type="number"
                   step="any"
-                  defaultValue={a.location_lat}
+                  defaultValue={a.locationLat}
                   onBlur={e =>
-                    updateAttraction(a.id, a.name, a.description, e.target.value, a.location_lng)
+                    updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, e.target.value, a.locationLng)
                   }
                 />
                 <input
                   type="number"
                   step="any"
-                  defaultValue={a.location_lng}
+                  defaultValue={a.locationLng}
                   onBlur={e =>
-                    updateAttraction(a.id, a.name, a.description, a.location_lat, e.target.value)
+                    updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, e.target.value)
                   }
                 />
               </div>
 
               <div className="coords-text">
-                📍 {a.location_lat}, {a.location_lng}
+                📍 {a.locationLat}, {a.locationLng}
               </div>
 
               <button
                 className="delete-btn"
-                onClick={() => deleteAttraction(a.id)}
+                onClick={() => deleteAttraction(a.idAttraction)}
               >
                 Obriši
               </button>

@@ -45,11 +45,16 @@ app.use("/api/attractions", attractionsRouter);
 app.use("/api/admin", adminRouter);
 
 
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => {
+  console.log("Serialize user:", user);
+  const userId = user.idUser || user.id;
+  console.log("User ID:", userId);
+  done(null, userId);
+});
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const result = await pool.query("SELECT * FROM users WHERE id=$1", [id]);
+    const result = await pool.query('SELECT * FROM users WHERE "idUser"=$1', [id]);
     done(null, result.rows[0]);
   } catch (err) {
     done(err, null);
@@ -77,15 +82,16 @@ passport.use(
 
         if (existing.rows.length > 0) {
            user = existing.rows[0];
+           console.log("Existing user from DB:", user);
         } else {
            const insert = await pool.query(
-           `INSERT INTO users (email, first_name, last_name, oauth_provider, oauth_id, role)
-            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-           [email, firstName, lastName, "google", profile.id, newRole]
+           `INSERT INTO users (email, "firstName", "lastName", role)
+            VALUES ($1, $2, $3, $4) RETURNING *`,
+           [email, firstName, lastName, newRole]
            );
             user = insert.rows[0];
+            console.log("New user from DB:", user);
           }
-
 
         done(null, user);
       } catch (err) {
@@ -131,8 +137,9 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login/failed" }),
   (req, res) => {
+    const userId = req.user.idUser || req.user.id;
     const token = jwt.sign(
-      { id: req.user.id, email: req.user.email, role: req.user.role },
+      { id: userId, email: req.user.email, role: req.user.role },
       SESSION_SECRET,
       { expiresIn: "1h" }
     );
@@ -156,15 +163,15 @@ app.get("/me", (req, res) => {
   try {
     const user = jwt.verify(token, SESSION_SECRET);
 
-    pool.query("SELECT id, email, role, first_name, last_name FROM users WHERE id=$1", [user.id])
+    pool.query('SELECT "idUser", email, role, "firstName", "lastName" FROM users WHERE "idUser"=$1', [user.id])
       .then(result => {
         if (result.rows.length > 0) {
           res.json({
-            id: result.rows[0].id,
+            id: result.rows[0].idUser,
             email: result.rows[0].email,
             role: result.rows[0].role,
-            firstName: result.rows[0].first_name,
-            lastName: result.rows[0].last_name
+            firstName: result.rows[0].firstName,
+            lastName: result.rows[0].lastName
           });
         } else {
           res.status(404).json({ error: "User not found" });
@@ -187,4 +194,4 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.listen(4000, () => console.log(" Server running on http://localhost:3000"));
+app.listen(4000, () => console.log(" Server running on http://localhost:4000"));

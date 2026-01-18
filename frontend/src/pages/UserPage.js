@@ -78,7 +78,8 @@ export default function UserPage() {
       });
 
       if (res.ok) {
-        setFavorites(favorites.filter(fav => fav.id !== favoriteId));
+        // Koristimo idAttraction umjesto id
+        setFavorites(favorites.filter(fav => fav.idAttraction !== favoriteId));
       } else {
         alert("Greška pri uklanjanju iz favorita!");
       }
@@ -139,12 +140,14 @@ export default function UserPage() {
         {favorites && favorites.length > 0 ? (
           <div className="favorites-grid">
             {favorites.map((fav) => (
-              <div key={fav.id} className="favorite-card">
-                <h3>{fav.name}</h3>
-                <p>{fav.description}</p>
-                <p className="location">{fav.location}</p>
+              <div key={fav.idAttraction} className="favorite-card">
+                <h3>{fav.nameAttraction}</h3>
+                <p>{fav.descriptionAttraction}</p>
+                <p className="location">
+                  {fav.locationLat}, {fav.locationLng}
+                </p>
                 <button 
-                  onClick={() => handleRemoveFavorite(fav.id)}
+                  onClick={() => handleRemoveFavorite(fav.idAttraction)}
                   className="remove-btn"
                 >
                   Ukloni iz omiljenih
