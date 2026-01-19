@@ -11,8 +11,8 @@ export default function EditorPage() {
   const [description, setDescription] = useState("");
   const [locationLat, setLocationLat] = useState("");
   const [locationLng, setLocationLng] = useState("");
-  const [workingHours, setWorkingHours] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [openingHours, setOpeningHours] = useState("");
+  const [image, setImage] = useState("");
 
   // Dohvat trenutno prijavljenog korisnika
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function EditorPage() {
   const addAttraction = async e => {
     e.preventDefault();
 
-    if (!name || !description || !locationLat || !locationLng || !workingHours || !imageUrl) {
+    if (!name || !description || !locationLat || !locationLng || !openingHours || !image) {
       setError("Sva polja su obavezna!");
       return;
     }
@@ -69,7 +69,7 @@ export default function EditorPage() {
     }
 
     if (lng < -180 || lng > 180) {
-      setError("Geografska dužina mora biti između -180 i 180!");
+      setError("Geografska širina mora biti između -180 i 180!");
       return;
     }
 
@@ -79,12 +79,12 @@ export default function EditorPage() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          name,
-          description,
+          name: name,
+          description: description,
           location_lat: lat,
           location_lng: lng,
-          working_hours: workingHours,
-          image_url: imageUrl,
+          working_hours: openingHours,
+          image_url: image,
         }),
       });
 
@@ -100,45 +100,29 @@ export default function EditorPage() {
       setDescription("");
       setLocationLat("");
       setLocationLng("");
-      setWorkingHours("");
-      setImageUrl("");
+      setOpeningHours("");
+      setImage("");
       setError("");
     } catch (err) {
       setError("Neuspjelo dodavanje znamenitosti!");
     }
   };
 
-  const updateAttraction = async (attraction, field, value) => {
-    const updatedData = {
-      name: attraction.nameAttraction,
-      description: attraction.descriptionAttraction,
-      location_lat: attraction.locationLat,
-      location_lng: attraction.locationLng,
-      working_hours: attraction.workingHours,
-      image_url: attraction.imageUrl,
-      [field]: value // Override samo polje koje se mijenja
-    };
-
+  const updateAttraction = async (id, name, description, lat, lng, openingHours, image) => {
     try {
-      await fetch(`http://localhost:4000/api/attractions/${attraction.idAttraction}`, {
+      await fetch(`http://localhost:4000/api/attractions/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify({
+          name: name,
+          description: description,
+          location_lat: parseFloat(lat),
+          location_lng: parseFloat(lng),
+          working_hours: openingHours,
+          image_url: image,
+        }),
       });
-      
-      // Ažuriraj state
-      setAttractions(attractions.map(a => 
-        a.idAttraction === attraction.idAttraction 
-          ? { ...a, [field === 'name' ? 'nameAttraction' : 
-                      field === 'description' ? 'descriptionAttraction' :
-                      field === 'location_lat' ? 'locationLat' :
-                      field === 'location_lng' ? 'locationLng' :
-                      field === 'working_hours' ? 'workingHours' :
-                      field === 'image_url' ? 'imageUrl' :
-                      field]: value }
-          : a
-      ));
     } catch (err) {
       console.error(err);
     }
@@ -168,72 +152,77 @@ export default function EditorPage() {
     return <h2 className="center">Pristup odbijen</h2>;
 
   return (
-    <div className="editor-container">
-      <h1>Uređivačka ploča</h1>
+    <>
+      <div className="editor-header">
+        <h2>Uređivačka ploča</h2>
+      </div>
+      <div className="editor-container">
+        <div className="editor-info-section">
+          <h1>Urednik</h1>
 
-      <p>
-        Prijavljeni kao <b>{userData.firstName}</b> ({userData.role})
-      </p>
+          <div className="editor-info">
+            <p>
+              Prijavljeni kao <b>{userData.firstName}</b> ({userData.email})
+            </p>
+          </div>
 
-      {error && <p className="error">{error}</p>}
+          {error && <p className="error">{error}</p>}
 
-      <button className="logout-btn" onClick={logout}>
-        Odjava
-      </button>
+          <button className="logout-btn" onClick={logout}>
+            Odjava
+          </button>
+        </div>
 
-      <h2>Dodajte znamenitost</h2>
-
-      <form onSubmit={addAttraction} className="add-form">
-        <input
-          placeholder="Naziv *"
+        <div className="attractions-wrapper">
+          <form onSubmit={addAttraction} className="add-form">
+          <h2>Dodajte znamenitost</h2>
+          <input
+          placeholder="Naziv"
           value={name}
           onChange={e => setName(e.target.value)}
         />
 
         <textarea
-          placeholder="Opis *"
+          placeholder="Opis"
           value={description}
           onChange={e => setDescription(e.target.value)}
-          rows={3}
+        />
+
+        <input
+          placeholder="Radno vrijeme"
+          value={openingHours}
+          onChange={e => setOpeningHours(e.target.value)}
+        />
+
+        <input
+          placeholder="URL slike"
+          value={image}
+          onChange={e => setImage(e.target.value)}
         />
 
         <div className="coords">
           <input
             type="number"
             step="any"
-            placeholder="Geografska širina *"
+            placeholder="Geografska širina"
             value={locationLat}
             onChange={e => setLocationLat(e.target.value)}
           />
           <input
             type="number"
             step="any"
-            placeholder="Geografska dužina *"
+            placeholder="Geografska dužina"
             value={locationLng}
             onChange={e => setLocationLng(e.target.value)}
           />
         </div>
 
-        <input
-          placeholder="Radno vrijeme *"
-          value={workingHours}
-          onChange={e => setWorkingHours(e.target.value)}
-        />
-
-        <input
-          placeholder="URL slike *"
-          value={imageUrl}
-          onChange={e => setImageUrl(e.target.value)}
-        />
-
         <button>Dodaj</button>
       </form>
 
-      <hr />
-
-      <h2>Znamenitosti ({attractions.length})</h2>
-
-      <div className="attractions-list">
+      <div className="attractions-section">
+        <h2>Znamenitosti ({attractions.length})</h2>
+        <div className="attractions-list">
         {attractions.length === 0 ? (
           <p className="empty">Nema dodanih znamenitosti</p>
         ) : (
@@ -241,15 +230,33 @@ export default function EditorPage() {
             <div key={a.idAttraction} className="attraction-card">
               <input
                 defaultValue={a.nameAttraction}
-                onBlur={e => updateAttraction(a, 'name', e.target.value)}
+                onBlur={e =>
+                  updateAttraction(a.idAttraction, e.target.value, a.descriptionAttraction, a.locationLat, a.locationLng, a.workingHours, a.imageUrl)
+                }
                 className="title-input"
               />
 
               <textarea
                 defaultValue={a.descriptionAttraction}
-                onBlur={e => updateAttraction(a, 'description', e.target.value)}
-                rows={3}
-                style={{ resize: 'vertical', width: '98%' }}
+                onBlur={e =>
+                  updateAttraction(a.idAttraction, a.nameAttraction, e.target.value, a.locationLat, a.locationLng, a.workingHours, a.imageUrl)
+                }
+              />
+
+              <input
+                defaultValue={a.workingHours || ""}
+                onBlur={e =>
+                  updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, a.locationLng, e.target.value, a.imageUrl)
+                }
+                className="extra-input"
+              />
+
+              <input
+                defaultValue={a.imageUrl || ""}
+                onBlur={e =>
+                  updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, a.locationLng, a.workingHours, e.target.value)
+                }
+                className="extra-input"
               />
 
               <div className="coords">
@@ -257,29 +264,19 @@ export default function EditorPage() {
                   type="number"
                   step="any"
                   defaultValue={a.locationLat}
-                  onBlur={e => updateAttraction(a, 'location_lat', parseFloat(e.target.value))}
+                  onBlur={e =>
+                    updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, e.target.value, a.locationLng)
+                  }
                 />
                 <input
                   type="number"
                   step="any"
                   defaultValue={a.locationLng}
-                  onBlur={e => updateAttraction(a, 'location_lng', parseFloat(e.target.value))}
+                  onBlur={e =>
+                    updateAttraction(a.idAttraction, a.nameAttraction, a.descriptionAttraction, a.locationLat, e.target.value)
+                  }
                 />
               </div>
-
-              <input
-                placeholder="Radno vrijeme"
-                defaultValue={a.workingHours || ""}
-                onBlur={e => updateAttraction(a, 'working_hours', e.target.value)}
-                className="extra-input"
-              />
-
-              <input
-                placeholder="URL slike"
-                defaultValue={a.imageUrl || ""}
-                onBlur={e => updateAttraction(a, 'image_url', e.target.value)}
-                className="extra-input"
-              />
 
               <div className="coords-text">
                 📍 {a.locationLat}, {a.locationLng}
@@ -294,7 +291,10 @@ export default function EditorPage() {
             </div>
           ))
         )}
+        </div>
+      </div>
       </div>
     </div>
+    </>
   );
 }

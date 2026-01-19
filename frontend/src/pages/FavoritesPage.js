@@ -25,7 +25,7 @@ export default function FavoritesPage() {
       method: "DELETE",
       credentials: "include",
     });
-    setFavorites(favorites.filter(f => f.idAttraction !== id));
+    setFavorites(favorites.filter(f => f.id !== id));
   };
 
   if (loading) return <h2 className="loading">Loading...</h2>;
@@ -37,7 +37,7 @@ export default function FavoritesPage() {
       {favorites.length === 0 ? (
         <p className="no-favorites">Nemate još favorita!</p>
       ) : (
-        <div className="favorites-grid2">
+        <div className="favorites-grid">
           {favorites.map(fav => (
             <div key={fav.idAttraction} className="favorite-card">
               {fav.imageUrl && (

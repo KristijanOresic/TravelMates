@@ -78,8 +78,7 @@ export default function UserPage() {
       });
 
       if (res.ok) {
-        // Koristimo idAttraction umjesto id
-        setFavorites(favorites.filter(fav => fav.idAttraction !== favoriteId));
+        setFavorites(favorites.filter(fav => fav.id !== favoriteId));
       } else {
         alert("Greška pri uklanjanju iz favorita!");
       }
@@ -109,26 +108,30 @@ export default function UserPage() {
   }
 
   return (
-    <div className="user-page">
-      <div className="profile-container">
-        <div className="profile-header">
-          <h1>{userData?.firstName} {userData?.lastName}</h1>
-          <p className="role-badge">{userData?.role}</p>
-        </div>
-
-        <div className="profile-info">
-          <div className="info-item">
-            <label>Email:</label>
-            <p>{userData?.email}</p>
+    <>
+      <div className="user-page-header">
+        <h2>Moj profil</h2>
+      </div>
+      <div className="user-page">
+        <div className="profile-container">
+          <div className="profile-header">
+            <h1>{userData?.firstName} {userData?.lastName}</h1>
+            <p className="role-badge">{userData?.role}</p>
           </div>
 
-          <div className="info-item">
-            <label>Uloga:</label>
-            <p>{userData?.role}</p>
-          </div>
-        </div>
+          <div className="profile-info">
+            <div className="info-item">
+              <label>Email:</label>
+              <p>{userData?.email}</p>
+            </div>
 
-        <a href="/map" className="map-link">Otvori kartu</a>
+            <div className="info-item">
+              <label>Uloga:</label>
+              <p>{userData?.role}</p>
+            </div>
+          </div>
+
+          <a href="/map" className="map-link">Otvori kartu</a>
         
         <button onClick={handleLogout} className="logout-btn">
           Odjava
@@ -141,8 +144,19 @@ export default function UserPage() {
           <div className="favorites-grid">
             {favorites.map((fav) => (
               <div key={fav.idAttraction} className="favorite-card">
+                {(() => {
+                  const imgSrc = fav.imageUrl || fav.image_url || fav.photo;
+                  return imgSrc ? (
+                    <img
+                      src={imgSrc}
+                      alt={fav.nameAttraction}
+                      className="favorite-image"
+                    />
+                  ) : null;
+                })()}
                 <h3>{fav.nameAttraction}</h3>
                 <p>{fav.descriptionAttraction}</p>
+                <p className="location">{fav.location}</p>
                 <button 
                   onClick={() => handleRemoveFavorite(fav.idAttraction)}
                   className="remove-btn"
@@ -157,5 +171,6 @@ export default function UserPage() {
         )}
       </div>
     </div>
+    </>
   );
 }

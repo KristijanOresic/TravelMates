@@ -46,7 +46,7 @@ export default function AdminPage() {
     });
 
     setUsers(users =>
-      users.map(u => (u.idUser === id ? { ...u, role } : u))
+      users.map(u => (u.id === id ? { ...u, role } : u))
     );
   };
 
@@ -58,7 +58,7 @@ export default function AdminPage() {
       credentials: "include",
     });
 
-    setUsers(users => users.filter(u => u.idUser !== id));
+    setUsers(users => users.filter(u => u.id !== id));
   };
 
   const logout = async () => {
@@ -81,55 +81,60 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="admin-container">
-      <h1>Administratorska ploča</h1>
+    <>
+      <div className="admin-header"><h2>Administratorska ploča</h2></div>
+      <div className="admin-container">
+        <h1>Administrator</h1>
 
-      <div className="admin-info">
-        <p>
-          Prijavljeni kao <b>{userData.firstName}</b> ({userData.email})
-        </p>
-      </div>
+        <div className="admin-info">
+          <p>
+            Prijavljeni kao <b>{userData.firstName}</b> ({userData.email})
+          </p>
+        </div>
 
-      <button onClick={logout} className="logout-btn">
-        Odjava
-      </button>
+        <button onClick={logout} className="logout-btn">
+          Odjava
+        </button>
 
-      <h2>Korisnici</h2>
+        <h2>Korisnici</h2>
 
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Ime</th>
-            <th>Uloga</th>
-            <th>Akcije</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {users.map(u => (
-            <tr key={u.idUser}>
-              <td>{u.email}</td>
-              <td>
-                {u.firstName} {u.lastName}
-              </td>
-              <td>
-                <select
-                  value={u.role}
-                  onChange={e => changeRole(u.idUser, e.target.value)}
-                >
-                  <option value="user">Korisnik</option>
-                  <option value="editor">Uređivač</option>
-                  <option value="admin">Administrator</option>
-                </select>
-              </td>
-              <td>
-                <button onClick={() => deleteUser(u.idUser)} className="delete-btn">Obriši</button>
-              </td>
+        <div className="table-wrapper">
+          <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Ime</th>
+              <th>Uloga</th>
+              <th>Akcije</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id}>
+                <td>{u.email}</td>
+                <td>
+                  {u.firstName} {u.lastName}
+                </td>
+                <td>
+                  <select
+                    value={u.role}
+                    onChange={e => changeRole(u.id, e.target.value)}
+                  >
+                    <option value="user">Korisnik</option>
+                    <option value="editor">Uređivač</option>
+                    <option value="admin">Administrator</option>
+                  </select>
+                </td>
+                <td>
+                  <button onClick={() => deleteUser(u.id)} className="delete-btn">Obriši</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </>
   );
 }
