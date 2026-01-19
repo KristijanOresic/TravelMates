@@ -11,11 +11,13 @@ export default function FavoritesPage() {
     })
       .then(res => res.json())
       .then(data => {
-        setFavorites(data);
+        // Osiguraj da je data niz
+        setFavorites(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setFavorites([]);
         setLoading(false);
       });
   }, []);
@@ -25,7 +27,7 @@ export default function FavoritesPage() {
       method: "DELETE",
       credentials: "include",
     });
-    setFavorites(favorites.filter(f => f.id !== id));
+    setFavorites(favorites.filter(f => f.idAttraction !== id));
   };
 
   if (loading) return <h2 className="loading">Loading...</h2>;

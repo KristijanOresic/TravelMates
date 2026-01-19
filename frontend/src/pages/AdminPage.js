@@ -46,7 +46,7 @@ export default function AdminPage() {
     });
 
     setUsers(users =>
-      users.map(u => (u.id === id ? { ...u, role } : u))
+      users.map(u => (u.idUser === id ? { ...u, role } : u))
     );
   };
 
@@ -58,7 +58,7 @@ export default function AdminPage() {
       credentials: "include",
     });
 
-    setUsers(users => users.filter(u => u.id !== id));
+    setUsers(users => users.filter(u => u.idUser !== id));
   };
 
   const logout = async () => {
@@ -111,7 +111,7 @@ export default function AdminPage() {
 
           <tbody>
             {users.map(u => (
-              <tr key={u.id}>
+              <tr key={u.idUser}>
                 <td>{u.email}</td>
                 <td>
                   {u.firstName} {u.lastName}
@@ -119,7 +119,7 @@ export default function AdminPage() {
                 <td>
                   <select
                     value={u.role}
-                    onChange={e => changeRole(u.id, e.target.value)}
+                    onChange={e => changeRole(u.idUser, e.target.value)}
                   >
                     <option value="user">Korisnik</option>
                     <option value="editor">Uređivač</option>
@@ -127,7 +127,7 @@ export default function AdminPage() {
                   </select>
                 </td>
                 <td>
-                  <button onClick={() => deleteUser(u.id)} className="delete-btn">Obriši</button>
+                  <button onClick={() => deleteUser(u.idUser)} className="delete-btn">Obriši</button>
                 </td>
               </tr>
             ))}

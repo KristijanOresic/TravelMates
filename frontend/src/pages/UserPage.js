@@ -40,10 +40,12 @@ export default function UserPage() {
 
         if (res.ok) {
           const data = await res.json();
-          setFavorites(data);
+          // Osiguraj da je data niz
+          setFavorites(Array.isArray(data) ? data : []);
         }
       } catch (err) {
         console.error("Greška pri dohvaćanju favorita:", err);
+        setFavorites([]);
       }
     };
 
@@ -78,7 +80,7 @@ export default function UserPage() {
       });
 
       if (res.ok) {
-        setFavorites(favorites.filter(fav => fav.id !== favoriteId));
+        setFavorites(favorites.filter(fav => fav.idAttraction !== favoriteId));
       } else {
         alert("Greška pri uklanjanju iz favorita!");
       }
@@ -156,7 +158,6 @@ export default function UserPage() {
                 })()}
                 <h3>{fav.nameAttraction}</h3>
                 <p>{fav.descriptionAttraction}</p>
-                <p className="location">{fav.location}</p>
                 <button 
                   onClick={() => handleRemoveFavorite(fav.idAttraction)}
                   className="remove-btn"

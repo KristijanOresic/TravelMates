@@ -125,7 +125,7 @@ router.delete("/:id", requireAuth, requireEditor, async (req, res) => {
 // Dodaj u favorite
 router.post("/favorites", requireAuth, async (req, res) => {
   const { attraction_id } = req.body;
-  const userId = req.user.id;
+  const userId = req.user.iduser;
 
   try {
     // Provjeri postoji li već
@@ -152,7 +152,7 @@ router.post("/favorites", requireAuth, async (req, res) => {
 
 // Ukloni iz favorita
 router.delete("/favorites/:attractionId", requireAuth, async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user.iduser;
   const { attractionId } = req.params;
 
   try {
@@ -170,7 +170,7 @@ router.delete("/favorites/:attractionId", requireAuth, async (req, res) => {
 
 // Dohvati favorite korisnika
 router.get("/favorites/list", requireAuth, async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user.iduser;
 
   try {
     const result = await pool.query(
