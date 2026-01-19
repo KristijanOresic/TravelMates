@@ -9,14 +9,21 @@ export default function FavoritesPage() {
     fetch("http://localhost:4000/api/attractions/favorites/list", {
       credentials: "include",
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log("Favorites response status:", res.status);
+        if (!res.ok) {
+          console.error("Favorites fetch error:", res.statusText);
+        }
+        return res.json();
+      })
       .then(data => {
+        console.log("Favorites data:", data);
         // Osiguraj da je data niz
         setFavorites(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
+        console.error("Favorites fetch error:", err);
         setFavorites([]);
         setLoading(false);
       });

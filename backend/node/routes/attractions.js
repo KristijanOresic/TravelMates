@@ -125,7 +125,9 @@ router.delete("/:id", requireAuth, requireEditor, async (req, res) => {
 // Dodaj u favorite
 router.post("/favorites", requireAuth, async (req, res) => {
   const { attraction_id } = req.body;
-  const userId = req.user.iduser;
+  const userId = req.user.id;
+
+  console.log(`Adding favorite: user=${userId}, attraction=${attraction_id}`);
 
   try {
     // Provjeri postoji li već
@@ -143,6 +145,7 @@ router.post("/favorites", requireAuth, async (req, res) => {
       [userId, attraction_id]
     );
 
+    console.log(`Favorite added successfully`);
     res.json({ message: "Added to favorites" });
   } catch (err) {
     console.error("Add favorite error:", err);
@@ -152,7 +155,7 @@ router.post("/favorites", requireAuth, async (req, res) => {
 
 // Ukloni iz favorita
 router.delete("/favorites/:attractionId", requireAuth, async (req, res) => {
-  const userId = req.user.iduser;
+  const userId = req.user.id;
   const { attractionId } = req.params;
 
   try {
@@ -170,7 +173,7 @@ router.delete("/favorites/:attractionId", requireAuth, async (req, res) => {
 
 // Dohvati favorite korisnika
 router.get("/favorites/list", requireAuth, async (req, res) => {
-  const userId = req.user.iduser;
+  const userId = req.user.id;
 
   try {
     const result = await pool.query(
@@ -180,6 +183,7 @@ router.get("/favorites/list", requireAuth, async (req, res) => {
       [userId]
     );
 
+    console.log(`Favorites for user ${userId}:`, result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error("Get favorites error:", err);
