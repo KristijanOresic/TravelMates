@@ -143,9 +143,6 @@ export default function UserPage() {
               <div key={fav.idAttraction} className="favorite-card">
                 <h3>{fav.nameAttraction}</h3>
                 <p>{fav.descriptionAttraction}</p>
-                <p className="location">
-                  {fav.locationLat}, {fav.locationLng}
-                </p>
                 <button 
                   onClick={() => handleRemoveFavorite(fav.idAttraction)}
                   className="remove-btn"

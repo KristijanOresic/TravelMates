@@ -117,7 +117,7 @@ export default function ChooseRole() {
   };
 
   const handleLogin = () => {
-    window.location.href = `http://localhost:4000/auth/google`;
+    window.location.href = "http://localhost:4000/auth/google?from=secret-admin-register";
   };
 
   return (

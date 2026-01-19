@@ -37,7 +37,7 @@ export default function FavoritesPage() {
       {favorites.length === 0 ? (
         <p className="no-favorites">Nemate još favorita!</p>
       ) : (
-        <div className="favorites-grid">
+        <div className="favorites-grid2">
           {favorites.map(fav => (
             <div key={fav.idAttraction} className="favorite-card">
               {fav.imageUrl && (
