@@ -12,8 +12,8 @@
     background-color: white;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    justify-content: center;
+    padding: 0 60px;
     box-sizing: border-box;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -22,19 +22,17 @@
     text-decoration: none;
     position: relative;
     left: 0;
-    margin-left: 170px;
     background-color: #6B4423;
     color: white;
     padding: 12px 24px;
     border-radius: 15px;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease;
     font-weight: 600;
     border: none;
     cursor: pointer;
 }
 
 .back-home-button:hover {
-    transform: scale(1.05);
     background-color: #4a2f17;
 }
 
@@ -47,6 +45,10 @@
     padding: 0 15px;
     color: #d32f2f;
     font-weight: 600;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .favorites-button:hover {
@@ -66,11 +68,18 @@
         overflow: hidden;
     }
     
+    /* Smaller logo specifically for MapPage on mobile */
+    .map-page-container .top-left-logo,
+    .top-left-logo {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
     #map {
-        height: calc(100vh - 100px);
+        height: calc(100vh - 110px);
         width: 100vw;
         position: fixed;
-        top: 100px;
+        top: 110px;
         left: 0;
     }
 
@@ -79,17 +88,25 @@
         top: 0;
         left: 0;
         z-index: 1000;
-        height: 100px;
+        height: 110px;
         width: 100vw;
+        padding: 0 16px;
+        justify-content: center;
     }
 
     .back-home-button {
-        padding: 8px 16px;
-        font-size: 14px;
+        padding: 8px 14px;
+        font-size: 12px;
+        border-radius: 10px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
     }
 
     .favorites-button {
-        font-size: 24px;
+        font-size: 22px;
         padding: 0 10px;
+        right: 16px;
     }
 }
