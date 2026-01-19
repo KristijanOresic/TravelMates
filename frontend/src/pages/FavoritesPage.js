@@ -40,39 +40,40 @@ export default function FavoritesPage() {
   if (loading) return <h2 className="loading">Loading...</h2>;
 
   return (
-    <div className="favorites-container2">
-      <h1>❤️ Moji Favoriti</h1>
-      
-      {favorites.length === 0 ? (
-        <p className="no-favorites">Nemate još favorita!</p>
-      ) : (
-        <div className="favorites-grid">
-          {favorites.map(fav => (
-            <div key={fav.idAttraction} className="favorite-card">
-              {fav.imageUrl && (
-                <img 
-                  src={fav.imageUrl} 
-                  alt={fav.nameAttraction} 
-                  className="favorite-image"
-                />
-              )}
-              <h3>{fav.nameAttraction}</h3>
-              <p className="favorite-description">{fav.descriptionAttraction}</p>
-              <p className="favorite-hours">
-                <strong>Radno vrijeme:</strong> {fav.workingHours || "Nije dostupno"}
-              </p>
-              <button 
-                onClick={() => removeFavorite(fav.idAttraction)}
-                className="remove-btn"
-              >
-                Ukloni iz favorita
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      
-      <a href="/user" className="back-link">← Nazad</a>
-    </div>
+    <>
+      <div className="favorites-header"><h2>❤️ Moji Favoriti</h2></div>
+      <div className="favorites-container2">
+        {favorites.length === 0 ? (
+          <p className="no-favorites">Nemate još favorita!</p>
+        ) : (
+          <div className="favorites-grid">
+            {favorites.map(fav => (
+              <div key={fav.idAttraction} className="favorite-card">
+                {fav.imageUrl && (
+                  <img 
+                    src={fav.imageUrl} 
+                    alt={fav.nameAttraction} 
+                    className="favorite-image"
+                  />
+                )}
+                <h3>{fav.nameAttraction}</h3>
+                <p className="favorite-description">{fav.descriptionAttraction}</p>
+                <p className="favorite-hours">
+                  <strong>Radno vrijeme:</strong> {fav.workingHours || "Nije dostupno"}
+                </p>
+                <button 
+                  onClick={() => removeFavorite(fav.idAttraction)}
+                  className="remove-btn"
+                >
+                  Ukloni iz favorita
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <a href="/user" className="back-link">← Nazad</a>
+      </div>
+    </>
   );
 }

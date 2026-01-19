@@ -1,13 +1,28 @@
 .favorites-container2 {
   max-width: 900px;
-  margin: 50px auto;
+  margin: 220px auto 50px;
   padding: 20px;
 }
 
-.favorites-container2 h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 30px;
+.favorites-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 150px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.favorites-header h2 {
+  color: #6B4423;
+  font-size: 32px;
+  margin: 0;
+  font-weight: 600;
 }
 
 .loading {
@@ -104,9 +119,18 @@
 }
 
 @media (max-width: 768px) {
+  .favorites-header {
+    height: 110px;
+    padding: 0 16px;
+  }
+
+  .favorites-header h2 {
+    font-size: 24px;
+  }
+
   .favorites-container2 {
     padding: 15px;
-    margin: 20px auto;
+    margin: 170px auto 20px;
   }
 
   .favorite-card {
