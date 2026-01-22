@@ -26,6 +26,8 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/auth/google/callback";
+const isProd = process.env.NODE_ENV === "production";
+
 
 // --- MIDDLEWARE ---
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
@@ -36,7 +38,11 @@ app.use(
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: isProd,              // HTTPS only
+      sameSite: isProd ? "none" : "lax", 
+    },
   })
 );
 app.use(passport.initialize());
@@ -115,10 +121,19 @@ app.get("/auth/google", (req, res, next) => {
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login/failed" }),
   (req, res) => {
-    const token = jwt.sign({ id: req.user.idUser, email: req.user.email, role: req.user.role },
-      SESSION_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { id: req.user.idUser, email: req.user.email, role: req.user.role },
+      SESSION_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    res.cookie("token", token, { httpOnly: true, secure: false, maxAge: 3600 * 1000 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: 3600 * 1000
+    });
+
     res.redirect(`${FRONTEND_URL}/login-success`);
   }
 );
