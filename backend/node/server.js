@@ -160,7 +160,11 @@ app.get("/me", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProd,              // isto kao kod login
+    sameSite: isProd ? "none" : "lax"
+  });
   req.session.destroy(() => res.json({ message: "Logged out" }));
 });
 
