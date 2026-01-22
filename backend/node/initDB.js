@@ -1,22 +1,32 @@
 import fs from "fs";
-import pg from "pg";
+import { Pool } from "pg";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const pool = new pg.Pool({
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 async function initDB() {
   try {
-    const sql = fs.readFileSync("./database.sql", "utf8");
+    const sql = fs.readFileSync(
+      path.resolve(__dirname, "../database.sql"),
+      "utf8"
+    );
     await pool.query(sql);
-    console.log("Database initialized successfully");
+    console.log("✅ Database initialized successfully");
     process.exit(0);
   } catch (err) {
-    console.error("Error initializing database:", err);
+    console.error("❌ Error initializing database:", err);
     process.exit(1);
   }
 }
