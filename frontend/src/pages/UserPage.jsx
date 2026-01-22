@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/UserPage.css";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function UserPage() {
   const [userData, setUserData] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -9,10 +11,7 @@ export default function UserPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch("http://localhost:4000/me", {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(`${BACKEND_URL}/me`, { method: "GET", credentials: "include" });
 
         if (res.ok) {
           const data = await res.json();
@@ -33,10 +32,7 @@ export default function UserPage() {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(`${BACKEND_URL}/api/attractions/favorites/list`, { method: "GET", credentials: "include" });
 
         if (res.ok) {
           const data = await res.json();
@@ -56,10 +52,7 @@ export default function UserPage() {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:4000/logout", {
-        method: "GET",
-        credentials: "include",
-      });
+      const res = await fetch(`${BACKEND_URL}/logout`, { method: "GET", credentials: "include" });
 
       if (res.ok) {
         window.location.href = "/";
@@ -74,10 +67,7 @@ export default function UserPage() {
 
   const handleRemoveFavorite = async (favoriteId) => {
     try {
-      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${favoriteId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(`${BACKEND_URL}/api/attractions/favorites/${favoriteId}`, { method: "DELETE", credentials: "include" });
 
       if (res.ok) {
         setFavorites(favorites.filter(fav => fav.idAttraction !== favoriteId));

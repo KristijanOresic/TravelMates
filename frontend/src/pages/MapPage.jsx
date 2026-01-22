@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import "../styles/MapPage.css";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const customMapStyle = [
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "transit", stylers: [{ visibility: "off" }] },
@@ -87,7 +89,7 @@ export default function App() {
   // --- API POZIVI ---
   const toggleFavorite = useCallback(async (attractionId) => {
     const isFav = userFavorites.includes(attractionId);
-    const url = `http://localhost:4000/api/attractions/favorites${isFav ? `/${attractionId}` : ""}`;
+    const url = `${BACKEND_URL}/api/attractions/favorites${isFav ? `/${attractionId}` : ""}`;
     const method = isFav ? "DELETE" : "POST";
 
     try {
@@ -114,8 +116,8 @@ export default function App() {
     const fetchInitialData = async () => {
       try {
         const [favRes, attRes] = await Promise.all([
-          fetch("http://localhost:4000/api/attractions/favorites/list", { credentials: "include" }),
-          fetch("http://localhost:4000/api/attractions")
+          fetch(`${BACKEND_URL}/api/attractions/favorites/list`, { credentials: "include" }),
+          fetch(`${BACKEND_URL}/api/attractions`, { credentials: "include" })
         ]);
 
         if (favRes.ok) {

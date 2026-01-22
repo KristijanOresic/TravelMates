@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/ChooseRole.css";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -10,7 +12,7 @@ export default function Register() {
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/me", { withCredentials: true });
+        const res = await axios.get(`${BACKEND_URL}/me`, { withCredentials: true });
         if (res.status === 200) {
           const user = res.data;
           if (user.role === "admin") {
@@ -42,7 +44,7 @@ export default function Register() {
 
     try {
       const check = await axios.post(
-        "http://localhost:4000/check-email",
+        `${BACKEND_URL}/check-email`,
         { email },
         { withCredentials: true }
       );
@@ -53,7 +55,7 @@ export default function Register() {
 
       // Svi novi korisnici = user
       const params = new URLSearchParams({ role: "user", firstName, lastName });
-      window.location.href = `http://localhost:4000/auth/google?${params.toString()}`;
+      window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
     } catch (err) {
       console.error(err);
       alert("Greška pri provjeri emaila!");
@@ -61,7 +63,7 @@ export default function Register() {
   };
 
   const handleLogin = () => {
-    window.location.href = `http://localhost:4000/auth/google`;
+    window.location.href = `${BACKEND_URL}/auth/google`; 
   };
 
   return (

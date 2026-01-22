@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "../styles/FavoritesPage.css";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/attractions/favorites/list", {
+    fetch(`${BACKEND_URL}/api/attractions/favorites/list`, {
       credentials: "include",
     })
       .then(res => {
@@ -18,7 +20,6 @@ export default function FavoritesPage() {
       })
       .then(data => {
         console.log("Favorites data:", data);
-        // Osiguraj da je data niz
         setFavorites(Array.isArray(data) ? data : []);
         setLoading(false);
       })
@@ -30,7 +31,7 @@ export default function FavoritesPage() {
   }, []);
 
   const removeFavorite = async (id) => {
-    await fetch(`http://localhost:4000/api/attractions/favorites/${id}`, {
+    await fetch(`${BACKEND_URL}/api/attractions/favorites/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -71,7 +72,6 @@ export default function FavoritesPage() {
             ))}
           </div>
         )}
-        
         <a href="/user" className="back-link">← Nazad</a>
       </div>
     </>

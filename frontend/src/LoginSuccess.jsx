@@ -4,9 +4,10 @@ import axios from "axios";
 
 export default function LoginSuccess() {
   const navigate = useNavigate();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    axios.get("http://localhost:4000/me", { withCredentials: true })
+    axios.get(`${BACKEND_URL}/me`, { withCredentials: true })
       .then(res => {
         if (res.data.role === "admin") {
           navigate("/admin");
@@ -19,7 +20,7 @@ export default function LoginSuccess() {
       .catch(() => {
         navigate("/"); 
       });
-  }, [navigate]);
+  }, [navigate, BACKEND_URL]);
 
   return <div>Logging in...</div>;
 }
