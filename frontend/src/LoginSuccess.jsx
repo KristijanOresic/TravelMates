@@ -1,26 +1,27 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function LoginSuccess() {
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const location = useLocation();
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("error") === "user-not-found") {
+      alert("Korisnik ne postoji. Registrirajte se.");
+      navigate("/"); // ili na registraciju
+      return;
+    }
+
     axios.get(`${BACKEND_URL}/me`, { withCredentials: true })
       .then(res => {
-        if (res.data.role === "admin") {
-          navigate("/admin");
-        } else if (res.data.role === "editor") {
-          navigate("/editor");
-        } else {
-          navigate("/user");
-        }
+        if (res.data.role === "admin") navigate("/admin");
+        else if (res.data.role === "editor") navigate("/editor");
+        else navigate("/user");
       })
-      .catch(() => {
-        navigate("/"); 
-      });
-  }, [navigate, BACKEND_URL]);
+      .catch(() => navigate("/"));
+  }, [navigate, location.search]);
 
   return <div>Logging in...</div>;
 }

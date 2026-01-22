@@ -70,8 +70,11 @@ export default function ChooseRole() {
   };
 
   const handleLogin = () => {
-    window.location.href = `${BACKEND_URL}/auth/google`;
+    // Login = action=login
+    const params = new URLSearchParams({ action: "login" });
+    window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
   };
+
 
   if (!isUnlocked) {
     return (

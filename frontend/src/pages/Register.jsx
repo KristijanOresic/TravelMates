@@ -31,36 +31,41 @@ export default function Register() {
   }, []);
 
   const handleRegister = async () => {
-    if (!firstName.trim() || !lastName.trim() || !email.trim()) {
-      alert("Molimo unesite ime, prezime i email!");
-      return;
-    }
+  if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+    alert("Molimo unesite ime, prezime i email!");
+    return;
+  }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Molimo unesite ispravan format email adrese!");
+  if (!emailRegex.test(email)) {
+    alert("Molimo unesite ispravan format email adrese!");
+    return;
+  }
+
+  try {
+    const check = await axios.post(
+      `${BACKEND_URL}/check-email`,
+      { email },
+      { withCredentials: true }
+    );
+    if (check.data.exists) {
+      alert("Ovaj email već postoji! Molimo prijavite se.");
       return;
     }
 
-    try {
-      const check = await axios.post(
-        `${BACKEND_URL}/check-email`,
-        { email },
-        { withCredentials: true }
-      );
-      if (check.data.exists) {
-        alert("Ovaj email već postoji! Molimo prijavite se.");
-        return;
-      }
-
-      // Svi novi korisnici = user
-      const params = new URLSearchParams({ role: "user", firstName, lastName });
-      window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
-    } catch (err) {
-      console.error(err);
-      alert("Greška pri provjeri emaila!");
-    }
-  };
+    // Registracija = action=register
+    const params = new URLSearchParams({
+      action: "register",
+      role: "user",
+      firstName,
+      lastName
+    });
+    window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
+  } catch (err) {
+    console.error(err);
+    alert("Greška pri provjeri emaila!");
+  }
+};
 
   const handleLogin = () => {
     window.location.href = `${BACKEND_URL}/auth/google`; 

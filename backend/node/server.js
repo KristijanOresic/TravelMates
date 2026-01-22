@@ -106,21 +106,34 @@ app.post("/check-email", async (req, res) => {
 });
 
 app.get("/auth/google", (req, res, next) => {
-  const { role = "user", firstName = "", lastName = "", from } = req.query;
-  req.session.role = role;
-  req.session.firstName = firstName;
-  req.session.lastName = lastName;
+  const { role = "user", firstName = "", lastName = "", from, action = "login" } = req.query;
+
+  // Ako je registracija, spremi podatke u session
+  if (action === "register") {
+    req.session.role = role;
+    req.session.firstName = firstName;
+    req.session.lastName = lastName;
+  }
 
   req.session.returnTo = from === "secret-admin-register"
     ? `${FRONTEND_URL}/secret-admin-register`
     : FRONTEND_URL;
+
+  // Spremi akciju u session da callback zna
+  req.session.authAction = action;
 
   passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
 });
 
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login/failed" }),
-  (req, res) => {
+  async (req, res) => {
+    if (!req.user) {
+      // ako user ne postoji i nije registracija
+      const redirectTo = req.session.returnTo || FRONTEND_URL;
+      return res.redirect(`${redirectTo}?error=user-not-found`);
+    }
+
     const token = jwt.sign(
       { id: req.user.idUser, email: req.user.email, role: req.user.role },
       SESSION_SECRET,
