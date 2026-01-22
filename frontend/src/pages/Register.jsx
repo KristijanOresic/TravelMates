@@ -34,6 +34,12 @@ export default function Register() {
       return;
     }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Molimo unesite ispravan format email adrese!");
+      return;
+    }
+
     try {
       const check = await axios.post(
         "http://localhost:4000/check-email",

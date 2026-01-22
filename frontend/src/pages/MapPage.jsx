@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import "../styles/MapPage.css";
 
-// Pomaknuto izvan komponente jer je statično (rješava jedan warning)
 const customMapStyle = [
-  { "featureType": "poi", "stylers": [{ "visibility": "off" }] },
-  { "featureType": "transit", "stylers": [{ "visibility": "off" }] },
-  { "featureType": "road", "stylers": [{ "visibility": "simplified" }] },
-  { "featureType": "landscape", "stylers": [{ "visibility": "simplified" }] },
-  { "elementType": "labels", "stylers": [{ "visibility": "off" }] }
+  { featureType: "poi", stylers: [{ visibility: "off" }] },
+  { featureType: "transit", stylers: [{ visibility: "off" }] },
+  { featureType: "road", stylers: [{ visibility: "simplified" }] },
+  { featureType: "landscape", stylers: [{ visibility: "simplified" }] },
+  { elementType: "labels", stylers: [{ visibility: "off" }] }
 ];
 
 export default function App() {
@@ -18,17 +17,13 @@ export default function App() {
 
   const [attractions, setAttractions] = useState([]);
   const [userFavorites, setUserFavorites] = useState([]);
-  const [userPos, setUserPos] = useState({ lat: 45.1, lng: 15.2 }); 
+  const [userPos, setUserPos] = useState({ lat: 45.1, lng: 15.2 });
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
   const [dataReady, setDataReady] = useState(false);
-  const [locationLoaded, setLocationLoaded] = useState(false);
-  
-  // Promijenjeno u Ref jer se vrijednost koristila samo interno, 
-  // a ne u samom HTML-u (JSX-u), što rješava 'isSpeaking' warning
+  const [showMap, setShowMap] = useState(false);
+
   const isSpeakingRef = useRef(false);
   const currentUtteranceRef = useRef(null);
-
-  // --- POMOĆNE FUNKCIJE ---
 
   const getDistance = useCallback((lat1, lng1, lat2, lng2) => {
     const R = 6371;
@@ -37,8 +32,8 @@ export default function App() {
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLng / 2) ** 2;
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }, []);
@@ -48,6 +43,7 @@ export default function App() {
       alert('Vaš preglednik ne podržava text-to-speech');
       return;
     }
+
     const speakerBtn = document.getElementById(`speaker-btn-${attractionId}`);
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -55,17 +51,21 @@ export default function App() {
       isSpeakingRef.current = false;
       return;
     }
+
     const utterance = new SpeechSynthesisUtterance(text);
     currentUtteranceRef.current = utterance;
     utterance.lang = 'hr-HR';
+
     utterance.onstart = () => {
       if (speakerBtn) speakerBtn.textContent = "⏸️";
       isSpeakingRef.current = true;
     };
+
     utterance.onend = () => {
       if (speakerBtn) speakerBtn.textContent = "🔊";
       isSpeakingRef.current = false;
     };
+
     window.speechSynthesis.speak(utterance);
   }, []);
 
@@ -75,7 +75,7 @@ export default function App() {
         resolve();
         return;
       }
-      const apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
       script.async = true;
@@ -85,7 +85,6 @@ export default function App() {
   }, []);
 
   // --- API POZIVI ---
-
   const toggleFavorite = useCallback(async (attractionId) => {
     const isFav = userFavorites.includes(attractionId);
     const url = `http://localhost:4000/api/attractions/favorites${isFav ? `/${attractionId}` : ""}`;
@@ -100,7 +99,7 @@ export default function App() {
       });
 
       if (res.ok) {
-        setUserFavorites(prev => 
+        setUserFavorites(prev =>
           isFav ? prev.filter(id => id !== attractionId) : [...prev, attractionId]
         );
         const favBtn = document.getElementById(`fav-btn-${attractionId}`);
@@ -111,8 +110,6 @@ export default function App() {
     }
   }, [userFavorites]);
 
-  // --- EFFECTI ---
-
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -120,29 +117,34 @@ export default function App() {
           fetch("http://localhost:4000/api/attractions/favorites/list", { credentials: "include" }),
           fetch("http://localhost:4000/api/attractions")
         ]);
+
         if (favRes.ok) {
           const favs = await favRes.json();
           setUserFavorites(favs.map(f => f.idAttraction));
         }
+
         if (attRes.ok) {
           const atts = await attRes.json();
           setAttractions(atts);
         }
+
         setDataReady(true);
+
+        // Ako želimo koristiti geolokaciju
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            setHasLocationPermission(true);
+          },
+          () => {}
+        );
+
       } catch (err) {
         console.error("Greška pri učitavanju:", err);
       }
     };
 
     fetchInitialData();
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setHasLocationPermission(true);
-        setLocationLoaded(true);
-      },
-      () => setLocationLoaded(true)
-    );
   }, []);
 
   useEffect(() => {
@@ -151,7 +153,17 @@ export default function App() {
   }, [toggleFavorite, speakText]);
 
   useEffect(() => {
-    if (!dataReady || !locationLoaded) return;
+    if (dataReady) {
+      const timer = setTimeout(() => {
+        setShowMap(true);
+      }, 2500); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [dataReady]);
+
+  useEffect(() => {
+    if (!dataReady || !showMap) return;
 
     const initMap = async () => {
       await loadGoogleMaps();
@@ -168,7 +180,7 @@ export default function App() {
         gestureHandling: "greedy"
       });
 
-      if (hasLocationPermission) {
+      if (hasLocationPermission && userPos.lat && userPos.lng) {
         new window.google.maps.Marker({
           position: userPos,
           map,
@@ -210,17 +222,10 @@ export default function App() {
               <h3 style="margin: 0 0 8px 0;">${a.nameAttraction}</h3>
               <p style="margin: 0 0 8px 0; font-size: 14px;">Radno vrijeme: ${a.workingHours || "Nije dostupno"}</p>
               <p style="margin: 0 0 12px 0; font-size: 14px;">${a.descriptionAttraction}</p>
-              ${hasLocationPermission ? `
-                <p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;">
-                  <strong>Udaljenost: ${distance.toFixed(2)} km</strong>
-                </p>` : ""}
+              ${hasLocationPermission ? `<p style="margin: 0 0 12px 0; font-weight: bold; color: #667eea;"><strong>Udaljenost: ${distance.toFixed(2)} km</strong></p>` : ""}
               <div style="display: flex; gap: 10px; align-items: center;">
-                <button id="speaker-btn-${a.idAttraction}" onclick="window.speakDescriptionMap('${a.descriptionAttraction.replace(/'/g, "\\'")}', ${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">
-                  🔊
-                </button>
-                <button id="fav-btn-${a.idAttraction}" onclick="window.toggleFavoriteMap(${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">
-                  ${heartIcon}
-                </button>
+                <button id="speaker-btn-${a.idAttraction}" onclick="window.speakDescriptionMap('${a.descriptionAttraction.replace(/'/g, "\\'")}', ${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Reproduciraj opis">🔊</button>
+                <button id="fav-btn-${a.idAttraction}" onclick="window.toggleFavoriteMap(${a.idAttraction})" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0;" title="Dodaj u favorite">${heartIcon}</button>
               </div>
             </div>`
         });
@@ -240,23 +245,21 @@ export default function App() {
     return () => {
       if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
     };
-    // KLJUČNO: Dodajemo isključivanje ESLint provjere samo za ovu liniju
-    // kako bismo spriječili beskonačno re-renderiranje mape.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataReady, locationLoaded]); 
+  }, [dataReady, showMap, hasLocationPermission, userPos]);
 
   return (
-    <div className="map-page-container"> 
+    <div className="map-page-container">
       <div className="map-page-header">
         <a className="back-home-button" href="/user">POVRATAK NA POČETNU STRANICU</a>
-        <button 
-          className="favorites-button" 
-          onClick={() => window.location.href = '/favorites'}>
+        <button className="favorites-button" onClick={() => window.location.href = '/favorites'}>
           ❤️ {userFavorites.length}
         </button>
       </div>
 
-      <div id="map" ref={mapRef}></div>
+      {showMap
+        ? <div id="map" ref={mapRef}></div>
+        : <div style={{ width: "100%", height: "100%", backgroundColor: "#fbf2e6" }}></div>
+      }
     </div>
   );
 }

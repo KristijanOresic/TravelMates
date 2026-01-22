@@ -172,6 +172,9 @@
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 418px; /* ili koliko želiš visinu */
+  overflow-y: auto;   /* vertikalni scroll */
+  overflow-x: hidden; /* sprječava horizontalni scroll */
 }
 
 .favorites-container h2 {

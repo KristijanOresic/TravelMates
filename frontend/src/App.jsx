@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register"; 
-import ChooseRole from "./pages/ChooseRole"; 
-import LoginSuccess from "./LoginSuccess";
-import UserPage from "./pages/UserPage";
-import AdminPage from "./pages/AdminPage";
-import EditorPage from "./pages/EditorPage";
-import MapPage from "./pages/MapPage";
-import FavoritesPage from "./pages/FavoritesPage";
+import Register from "./pages/Register.jsx"; 
+import ChooseRole from "./pages/ChooseRole.jsx"; 
+import LoginSuccess from "./LoginSuccess.jsx";
+import UserPage from "./pages/UserPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
+import EditorPage from "./pages/EditorPage.jsx";
+import MapPage from "./pages/MapPage.jsx";
+import FavoritesPage from "./pages/FavoritesPage.jsx";
 import "./App.css";
 
 function App() {

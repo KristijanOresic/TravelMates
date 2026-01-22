@@ -26,7 +26,7 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(
@@ -132,9 +132,9 @@ app.get("/auth/google", (req, res, next) => {
   req.session.lastName = lastName;
 
   if (from === "secret-admin-register") {
-    req.session.returnTo = "http://localhost:3000/secret-admin-register";
+    req.session.returnTo = "http://localhost:5173/secret-admin-register";
   } else {
-    req.session.returnTo = "http://localhost:3000/";
+    req.session.returnTo = "http://localhost:5173/";
   }
 
   passport.authenticate("google", {
@@ -164,13 +164,13 @@ app.get(
       maxAge: 60 * 60 * 1000,
     });
 
-    res.redirect("http://localhost:3000/login-success");
+    res.redirect("http://localhost:5173/login-success");
   }
 );
 
 app.get("/login/failed", (req, res) => {
   const redirectTo =
-    req.session.returnTo || "http://localhost:3000/";
+    req.session.returnTo || "http://localhost:5173/";
 
   res.send(`
     <!DOCTYPE html>

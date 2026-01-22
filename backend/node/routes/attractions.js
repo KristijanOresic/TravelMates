@@ -127,8 +127,6 @@ router.post("/favorites", requireAuth, async (req, res) => {
   const { attraction_id } = req.body;
   const userId = req.user.id;
 
-  console.log(`Adding favorite: user=${userId}, attraction=${attraction_id}`);
-
   try {
     // Provjeri postoji li već
     const existing = await pool.query(
@@ -145,7 +143,6 @@ router.post("/favorites", requireAuth, async (req, res) => {
       [userId, attraction_id]
     );
 
-    console.log(`Favorite added successfully`);
     res.json({ message: "Added to favorites" });
   } catch (err) {
     console.error("Add favorite error:", err);
@@ -183,7 +180,6 @@ router.get("/favorites/list", requireAuth, async (req, res) => {
       [userId]
     );
 
-    console.log(`Favorites for user ${userId}:`, result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error("Get favorites error:", err);
