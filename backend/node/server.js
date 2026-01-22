@@ -14,33 +14,59 @@ import adminRouter from "./routes/admin.js";
 
 const app = express();
 
+/* =======================
+   DATABASE (Render ready)
+======================= */
 const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASS,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
+/* =======================
+   ENV VARS
+======================= */
 const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+/* =======================
+   CORS
+======================= */
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 app.use(express.json());
+
+/* =======================
+   SESSION
+======================= */
 app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    },
   })
 );
+
+/* =======================
+   PASSPORT
+======================= */
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/api/attractions", attractionsRouter);
-app.use("/api/admin", adminRouter);
 
 passport.serializeUser((user, done) => {
   done(null, user.idUser);
@@ -58,12 +84,15 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+/* =======================
+   GOOGLE STRATEGY
+======================= */
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:4000/auth/google/callback",
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
@@ -76,22 +105,18 @@ passport.use(
         );
 
         if (existing.rows.length > 0) {
-          // LOGIN – USER EXISTS
           return done(null, existing.rows[0]);
         }
 
-        // USER DOES NOT EXIST
         const isRegistration =
           req.session.role &&
           req.session.firstName &&
           req.session.lastName;
 
         if (!isRegistration) {
-          // LOGIN ATTEMPT FOR NON-EXISTENT USER
           return done(null, false);
         }
 
-        // REGISTRATION
         const insert = await pool.query(
           `INSERT INTO users (email, "firstName", "lastName", role)
            VALUES ($1, $2, $3, $4)
@@ -112,6 +137,15 @@ passport.use(
   )
 );
 
+/* =======================
+   ROUTES
+======================= */
+app.use("/api/attractions", attractionsRouter);
+app.use("/api/admin", adminRouter);
+
+/* =======================
+   AUTH ROUTES
+======================= */
 app.post("/check-email", async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: "Email je obavezan" });
@@ -131,11 +165,10 @@ app.get("/auth/google", (req, res, next) => {
   req.session.firstName = firstName;
   req.session.lastName = lastName;
 
-  if (from === "secret-admin-register") {
-    req.session.returnTo = "http://localhost:5173/secret-admin-register";
-  } else {
-    req.session.returnTo = "http://localhost:5173/";
-  }
+  req.session.returnTo =
+    from === "secret-admin-register"
+      ? `${FRONTEND_URL}/secret-admin-register`
+      : FRONTEND_URL;
 
   passport.authenticate("google", {
     scope: ["profile", "email"],
@@ -160,17 +193,17 @@ app.get(
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
 
-    res.redirect("http://localhost:5173/login-success");
+    res.redirect(`${FRONTEND_URL}/login-success`);
   }
 );
 
 app.get("/login/failed", (req, res) => {
-  const redirectTo =
-    req.session.returnTo || "http://localhost:5173/";
+  const redirectTo = req.session.returnTo || FRONTEND_URL;
 
   res.send(`
     <!DOCTYPE html>
@@ -213,6 +246,10 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.listen(4000, () =>
-  console.log("Server running on http://localhost:4000")
+/* =======================
+   START SERVER
+======================= */
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
 );

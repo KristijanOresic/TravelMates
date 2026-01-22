@@ -11,8 +11,8 @@ export default function ChooseRole() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
-  const SECRET_PASSWORD = "travelmate2025";
-
+  const SECRET_PASSWORD = import.meta.env.VITE_SECRET_PASSWORD;
+  
   useEffect(() => {
     // Ova funkcija se okida kada korisnik klikne Back u pregledniku
     const handleBackButton = (event) => {
