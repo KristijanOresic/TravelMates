@@ -207,7 +207,6 @@ app.get("/login/failed", (req, res) => {
 });
 
 app.get("/me", async (req, res) => {
-  res.set("Cache-Control", "no-store"); // sprječava 304
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Not logged in" });
 
@@ -226,7 +225,6 @@ app.get("/me", async (req, res) => {
     res.status(401).json({ error: "Invalid token" });
   }
 });
-
 
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
