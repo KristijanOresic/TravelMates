@@ -26,34 +26,18 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/auth/google/callback";
 const isProduction = process.env.NODE_ENV === "production";
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || origin === FRONTEND_URL) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
-app.set("trust proxy", 1); // Render proxy
 
 app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-    },
+    saveUninitialized: true,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
   })
-);
+);  
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -178,9 +162,8 @@ app.get(
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProduction,          // true na Renderu
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 60 * 60 * 1000,
+      secure: false,
+        maxAge: 60 * 60 * 1000,
     });
 
 
