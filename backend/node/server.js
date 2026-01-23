@@ -30,14 +30,19 @@ app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "none",
+    },
   })
-);  
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -162,8 +167,9 @@ app.get(
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-        maxAge: 60 * 60 * 1000,
+      secure: true,
+      sameSite: "none",
+      maxAge: 60 * 60 * 1000,
     });
 
 
