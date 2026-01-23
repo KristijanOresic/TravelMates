@@ -184,7 +184,7 @@ app.get(
     });
 
 
-    res.redirect(`${FRONTEND_URL}/login-success`);
+    res.redirect(`${FRONTEND_URL}/login-success?from=oauth`);
   }
 );
 
