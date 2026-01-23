@@ -33,6 +33,8 @@ const isProd = process.env.NODE_ENV === "production";
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
+
+app.set('trust proxy', 1); // bitno za Render/HTTPS
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -74,6 +76,8 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
+        console.log("SESSION BEFORE STRATEGY:", req.session);
+        console.log("PROFILE EMAIL:", profile.emails[0].value);
         const email = profile.emails[0].value;
         const existing = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
 
