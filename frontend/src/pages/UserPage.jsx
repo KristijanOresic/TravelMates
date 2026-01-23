@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/UserPage.css";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
 export default function UserPage() {
   const [userData, setUserData] = useState(null);

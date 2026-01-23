@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/EditorPage.css";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
 export default function EditorPage() {
   const [userData, setUserData] = useState(null);

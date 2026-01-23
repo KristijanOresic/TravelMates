@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import "../styles/MapPage.css";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
 const customMapStyle = [
   { featureType: "poi", stylers: [{ visibility: "off" }] },
