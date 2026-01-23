@@ -37,7 +37,7 @@ router.post("/", requireAuth, requireEditor, async (req, res) => {
     interesting_facts
   } = req.body;
 
-  // Validacija
+  // Validacija ulaznih podataka
   if (!name || !description || location_lat === undefined || location_lng === undefined) {
     return res.status(400).json({ error: "Name, description and coordinates are required" });
   }
@@ -65,7 +65,6 @@ router.post("/", requireAuth, requireEditor, async (req, res) => {
   }
 });
 
-// Ažuriranje znamenitosti
 router.put("/:id", requireAuth, requireEditor, async (req, res) => {
   const { 
     name, 
@@ -80,7 +79,6 @@ router.put("/:id", requireAuth, requireEditor, async (req, res) => {
     interesting_facts
   } = req.body;
 
-  // Validacija
   if (!name || !description || location_lat === undefined || location_lng === undefined) {
     return res.status(400).json({ error: "Name, description and coordinates are required" });
   }
@@ -125,7 +123,6 @@ router.post("/favorites", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Provjeri postoji li već
     const existing = await pool.query(
       'SELECT * FROM "userFavorites" WHERE "idUser"=$1 AND "idAttraction"=$2',
       [userId, attraction_id]

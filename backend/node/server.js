@@ -14,13 +14,11 @@ import adminRouter from "./routes/admin.js";
 
 const app = express();
 
-// --- POOL ---
 const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL, // koristi globalnu bazu Render
-  ssl: { rejectUnauthorized: false }, // Render self-signed cert
+  connectionString: process.env.DATABASE_URL, 
+  ssl: { rejectUnauthorized: false }, 
 });
 
-// --- VARIJABLE ---
 const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -28,13 +26,11 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/auth/google/callback";
 const isProd = process.env.NODE_ENV === "production";
 
-
-// --- MIDDLEWARE ---
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
-app.set('trust proxy', 1); // bitno za Render/HTTPS
+app.set('trust proxy', 1); 
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -42,7 +38,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: isProd,              // HTTPS only
+      secure: isProd,             
       sameSite: isProd ? "none" : "lax", 
     },
   })
@@ -52,7 +48,6 @@ app.use(passport.session());
 app.use("/api/attractions", attractionsRouter);
 app.use("/api/admin", adminRouter);
 
-// --- PASSPORT ---
 passport.serializeUser((user, done) => done(null, user.idUser));
 passport.deserializeUser(async (id, done) => {
   try {
@@ -76,8 +71,6 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
-        console.log("SESSION BEFORE STRATEGY:", req.session);
-        console.log("PROFILE EMAIL:", profile.emails[0].value);
         const email = profile.emails[0].value;
         const existing = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
 
@@ -100,7 +93,6 @@ passport.use(
   )
 );
 
-// --- AUTH ROUTES ---
 app.post("/check-email", async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: "Email je obavezan" });
@@ -166,13 +158,12 @@ app.get("/me", async (req, res) => {
 app.get("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: isProd,              // isto kao kod login
+    secure: isProd,             
     sameSite: isProd ? "none" : "lax"
   });
   req.session.destroy(() => res.json({ message: "Logged out" }));
 });
 
-// --- SERVER LISTEN ---
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

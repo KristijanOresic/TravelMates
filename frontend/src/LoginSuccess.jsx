@@ -9,7 +9,7 @@ export default function LoginSuccess() {
   useEffect(() => {
     axios.get(`${BACKEND_URL}/me`, { withCredentials: true })
       .then(res => {
-        console.log("Me response:", res.data); // <-- DEBUG
+        console.log("Me response:", res.data); 
         if (res.data.role === "admin") {
           navigate("/admin");
         } else if (res.data.role === "editor") {

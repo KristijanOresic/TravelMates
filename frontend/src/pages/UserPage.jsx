@@ -36,7 +36,6 @@ export default function UserPage() {
 
         if (res.ok) {
           const data = await res.json();
-          // Osiguraj da je data niz
           setFavorites(Array.isArray(data) ? data : []);
         }
       } catch (err) {

@@ -16,7 +16,6 @@ export default function EditorPage() {
   const [openingHours, setOpeningHours] = useState("");
   const [image, setImage] = useState("");
 
-  // Dohvat trenutno prijavljenog korisnika
   useEffect(() => {
     const fetchMe = async () => {
       try {

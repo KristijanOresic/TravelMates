@@ -53,7 +53,6 @@ export default function Register() {
         return;
       }
 
-      // Svi novi korisnici = user
       const params = new URLSearchParams({ role: "user", firstName, lastName });
       window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
     } catch (err) {

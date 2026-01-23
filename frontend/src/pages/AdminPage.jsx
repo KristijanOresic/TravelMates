@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/AdminPage.css";
 
-// Backend URL iz .env
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
 export default function AdminPage() {

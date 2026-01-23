@@ -10,7 +10,7 @@ export function requireAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, SESSION_SECRET);
-    req.user = decoded; // { id, email, role } - 'id' je zapravo idUser iz JWT-a
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid token" });

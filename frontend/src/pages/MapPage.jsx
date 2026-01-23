@@ -132,7 +132,6 @@ export default function App() {
 
         setDataReady(true);
 
-        // Ako želimo koristiti geolokaciju
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
