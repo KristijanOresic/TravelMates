@@ -22,18 +22,39 @@ const pool = new pg.Pool({
 const SESSION_SECRET = process.env.SESSION_SECRET || "tajna";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/auth/google/callback";
+const isProduction = process.env.NODE_ENV === "production";
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || origin === FRONTEND_URL) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
+app.set("trust proxy", 1); // Render proxy
+
 app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    saveUninitialized: false,
+    cookie: {
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/attractions", attractionsRouter);
@@ -60,7 +81,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:4000/auth/google/callback",
+      callbackURL: GOOGLE_CALLBACK_URL,
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
@@ -129,9 +150,9 @@ app.get("/auth/google", (req, res, next) => {
   req.session.lastName = lastName;
 
   if (from === "secret-admin-register") {
-    req.session.returnTo = "http://localhost:5173/secret-admin-register";
+    req.session.returnTo = `${FRONTEND_URL}/secret-admin-register`;
   } else {
-    req.session.returnTo = "http://localhost:5173/";
+    req.session.returnTo = `${FRONTEND_URL}/`;
   }
 
   passport.authenticate("google", {
@@ -157,17 +178,19 @@ app.get(
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,          // true na Renderu
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 60 * 60 * 1000,
     });
 
-    res.redirect("http://localhost:5173/login-success");
+
+    res.redirect(`${FRONTEND_URL}/login-success`);
   }
 );
 
 app.get("/login/failed", (req, res) => {
   const redirectTo =
-    req.session.returnTo || "http://localhost:5173/";
+    req.session.returnTo || `${FRONTEND_URL}/`;
 
   res.send(`
     <!DOCTYPE html>
@@ -210,6 +233,8 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.listen(4000, () =>
-  console.log("Server running on http://localhost:4000")
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
 );

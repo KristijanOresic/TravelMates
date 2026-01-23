@@ -24,6 +24,7 @@ export default function App() {
 
   const isSpeakingRef = useRef(false);
   const currentUtteranceRef = useRef(null);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   const getDistance = useCallback((lat1, lng1, lat2, lng2) => {
     const R = 6371;
@@ -87,7 +88,7 @@ export default function App() {
   // --- API POZIVI ---
   const toggleFavorite = useCallback(async (attractionId) => {
     const isFav = userFavorites.includes(attractionId);
-    const url = `http://localhost:4000/api/attractions/favorites${isFav ? `/${attractionId}` : ""}`;
+    const url = `${BACKEND_URL}/api/attractions/favorites${isFav ? `/${attractionId}` : ""}`;
     const method = isFav ? "DELETE" : "POST";
 
     try {
@@ -114,8 +115,8 @@ export default function App() {
     const fetchInitialData = async () => {
       try {
         const [favRes, attRes] = await Promise.all([
-          fetch("http://localhost:4000/api/attractions/favorites/list", { credentials: "include" }),
-          fetch("http://localhost:4000/api/attractions")
+          fetch(`${BACKEND_URL}/api/attractions/favorites/list`, { credentials: "include" }),
+          fetch(`${BACKEND_URL}/api/attractions`)
         ]);
 
         if (favRes.ok) {
@@ -156,7 +157,7 @@ export default function App() {
     if (dataReady) {
       const timer = setTimeout(() => {
         setShowMap(true);
-      }, 2500); 
+      }, 3500); 
 
       return () => clearTimeout(timer);
     }

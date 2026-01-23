@@ -11,6 +11,7 @@ export default function ChooseRole() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const SECRET_PASSWORD = import.meta.env.VITE_SECRET_PASSWORD;
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function ChooseRole() {
 
     const checkLoggedIn = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/me", {
+        const res = await axios.get(`${BACKEND_URL}/me`, {
           withCredentials: true,
         });
 
@@ -98,7 +99,7 @@ export default function ChooseRole() {
 
     try {
       const check = await axios.post(
-        "http://localhost:4000/check-email",
+        `${BACKEND_URL}/check-email`,
         { email },
         { withCredentials: true }
       );
@@ -109,7 +110,7 @@ export default function ChooseRole() {
       }
 
       const params = new URLSearchParams({ role, firstName, lastName });
-      window.location.href = `http://localhost:4000/auth/google?${params.toString()}`;
+      window.location.href = `${BACKEND_URL}/auth/google?${params.toString()}`;
     } catch (err) {
       console.error(err);
       alert("Greška pri provjeri emaila!");
@@ -117,7 +118,7 @@ export default function ChooseRole() {
   };
 
   const handleLogin = () => {
-    window.location.href = `http://localhost:4000/auth/google`;
+    window.location.href = `${BACKEND_URL}/auth/google`;
   };
 
   return (

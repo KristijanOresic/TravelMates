@@ -13,12 +13,13 @@ export default function EditorPage() {
   const [locationLng, setLocationLng] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [image, setImage] = useState("");
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   // Dohvat trenutno prijavljenog korisnika
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const res = await fetch("http://localhost:4000/me", {
+        const res = await fetch(`${BACKEND_URL}/me`, {
           credentials: "include",
         });
 
@@ -39,7 +40,7 @@ export default function EditorPage() {
     if (!userData) return;
     if (!["editor", "admin"].includes(userData.role)) return;
 
-    fetch("http://localhost:4000/api/attractions", {
+    fetch(`${BACKEND_URL}/api/attractions`, {
       credentials: "include",
     })
       .then(res => res.json())
@@ -74,7 +75,7 @@ export default function EditorPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:4000/api/attractions", {
+      const res = await fetch(`${BACKEND_URL}/api/attractions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -110,7 +111,7 @@ export default function EditorPage() {
 
   const updateAttraction = async (id, name, description, lat, lng, openingHours, image) => {
     try {
-      await fetch(`http://localhost:4000/api/attractions/${id}`, {
+      await fetch(`${BACKEND_URL}/api/attractions/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -131,7 +132,7 @@ export default function EditorPage() {
   const deleteAttraction = async id => {
     if (!window.confirm("Obrisati znamenitost?")) return;
 
-    await fetch(`http://localhost:4000/api/attractions/${id}`, {
+    await fetch(`${BACKEND_URL}/api/attractions/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -140,7 +141,7 @@ export default function EditorPage() {
   };
 
   const logout = async () => {
-    await fetch("http://localhost:4000/logout", {
+    await fetch(`${BACKEND_URL}/logout`, {
       credentials: "include",
     });
     window.location.href = "/";

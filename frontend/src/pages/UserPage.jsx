@@ -5,11 +5,12 @@ export default function UserPage() {
   const [userData, setUserData] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch("http://localhost:4000/me", {
+        const res = await fetch(`${BACKEND_URL}/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -33,7 +34,7 @@ export default function UserPage() {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/attractions/favorites/list", {
+        const res = await fetch(`${BACKEND_URL}/api/attractions/favorites/list`, {
           method: "GET",
           credentials: "include",
         });
@@ -56,7 +57,7 @@ export default function UserPage() {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:4000/logout", {
+      const res = await fetch(`${BACKEND_URL}/logout`, {
         method: "GET",
         credentials: "include",
       });
@@ -74,7 +75,7 @@ export default function UserPage() {
 
   const handleRemoveFavorite = async (favoriteId) => {
     try {
-      const res = await fetch(`http://localhost:4000/api/attractions/favorites/${favoriteId}`, {
+      const res = await fetch(`${BACKEND_URL}/api/attractions/favorites/${favoriteId}`, {
         method: "DELETE",
         credentials: "include",
       });

@@ -4,9 +4,10 @@ import "../styles/FavoritesPage.css";
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/attractions/favorites/list", {
+    fetch(`${BACKEND_URL}/api/attractions/favorites/list`, {
       credentials: "include",
     })
       .then(res => {
@@ -30,7 +31,7 @@ export default function FavoritesPage() {
   }, []);
 
   const removeFavorite = async (id) => {
-    await fetch(`http://localhost:4000/api/attractions/favorites/${id}`, {
+    await fetch(`${BACKEND_URL}/api/attractions/favorites/${id}`, {
       method: "DELETE",
       credentials: "include",
     });

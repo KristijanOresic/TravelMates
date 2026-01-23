@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../styles/AdminPage.css";
 
+
 export default function AdminPage() {
   const [userData, setUserData] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   // Dohvat trenutno prijavljenog korisnika
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const res = await fetch("http://localhost:4000/me", {
+        const res = await fetch(`${BACKEND_URL}/me`, {
           credentials: "include",
         });
 
@@ -30,7 +32,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (userData?.role !== "admin") return;
 
-    fetch("http://localhost:4000/api/admin/users", {
+    fetch(`${BACKEND_URL}/api/admin/users`, {
       credentials: "include",
     })
       .then(res => res.json())
@@ -38,7 +40,7 @@ export default function AdminPage() {
   }, [userData]);
 
   const changeRole = async (id, role) => {
-    await fetch(`http://localhost:4000/api/admin/users/${id}/role`, {
+    await fetch(`${BACKEND_URL}/api/admin/users/${id}/role`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -53,7 +55,7 @@ export default function AdminPage() {
   const deleteUser = async id => {
     if (!window.confirm("Jeste li sigurni da želite obrisati korisnika?")) return;
 
-    await fetch(`http://localhost:4000/api/admin/users/${id}`, {
+    await fetch(`${BACKEND_URL}/api/admin/users/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -62,7 +64,7 @@ export default function AdminPage() {
   };
 
   const logout = async () => {
-    await fetch("http://localhost:4000/logout", {
+    await fetch(`${BACKEND_URL}/logout`, {
       credentials: "include",
     });
     window.location.href = "/";
