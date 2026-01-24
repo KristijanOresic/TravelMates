@@ -157,7 +157,7 @@ export default function App() {
     if (dataReady) {
       const timer = setTimeout(() => {
         setShowMap(true);
-      }, 2500); 
+      }, 3500); 
 
       return () => clearTimeout(timer);
     }
