@@ -38,7 +38,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: isProd,             
+      secure: isProd,            
       sameSite: isProd ? "none" : "lax", 
     },
   })
@@ -111,7 +111,10 @@ app.get("/auth/google", (req, res, next) => {
     ? `${FRONTEND_URL}/secret-admin-register`
     : FRONTEND_URL;
 
-  passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })(req, res, next);
 });
 
 app.get("/auth/google/callback",
@@ -156,12 +159,24 @@ app.get("/me", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: isProd,             
-    sameSite: isProd ? "none" : "lax"
+  req.logout(() => {
+    req.session.destroy(() => {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
+        path: "/",
+      });
+
+      res.clearCookie("connect.sid", {
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
+        path: "/",
+      });
+
+      res.json({ message: "Logged out" });
+    });
   });
-  req.session.destroy(() => res.json({ message: "Logged out" }));
 });
 
 const PORT = process.env.PORT || 4000;
